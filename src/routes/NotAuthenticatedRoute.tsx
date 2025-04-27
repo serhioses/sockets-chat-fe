@@ -4,13 +4,13 @@ import { EAsyncStatus } from '@/constants/status';
 import { useAuth } from '@/store/useAuth';
 
 export function NotAuthenticatedRoute() {
-    const { meStatus } = useAuth();
+    const { status } = useAuth();
 
-    if (meStatus === EAsyncStatus.PENDING) {
+    if (status === EAsyncStatus.PENDING) {
         return <div>Loading auth...</div>;
     }
 
-    if (meStatus === EAsyncStatus.REJECTED) {
+    if (status === EAsyncStatus.REJECTED) {
         return <Outlet />;
     }
 

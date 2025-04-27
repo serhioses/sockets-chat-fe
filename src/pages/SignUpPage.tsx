@@ -10,13 +10,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { signUpSchema } from '@/constants/auth';
 import { useAuth } from '@/store/useAuth';
 import { EAsyncStatus } from '@/constants/status';
+import { AuthIllustration } from '@/components/auth/AutIllustration';
 
 export function SignUpPage() {
     const methods = useForm({
         resolver: zodResolver(signUpSchema),
         reValidateMode: 'onSubmit',
     });
-    const { signUpStatus, signUp, error, formErrors } = useAuth();
+    const { status, signUp, error, formErrors } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -26,10 +27,10 @@ export function SignUpPage() {
     }, [error]);
 
     useEffect(() => {
-        if (signUpStatus === EAsyncStatus.FULFILLED) {
+        if (status === EAsyncStatus.FULFILLED) {
             navigate('/', { replace: true });
         }
-    }, [signUpStatus]);
+    }, [status]);
 
     return (
         <div className="min-h-dvh grid lg:grid-cols-2">
@@ -69,7 +70,7 @@ export function SignUpPage() {
                             type="submit"
                             className="btn btn-soft btn-primary btn-lg w-full mt-4"
                         >
-                            {signUpStatus === EAsyncStatus.PENDING && (
+                            {status === EAsyncStatus.PENDING && (
                                 <span className="loading loading-spinner"></span>
                             )}
                             Submit
@@ -86,6 +87,11 @@ export function SignUpPage() {
                     </div>
                 </div>
             </div>
+
+            <AuthIllustration
+                title="Join our community"
+                text="Connect with friends, share moments, and stay in touch with your loved ones."
+            />
         </div>
     );
 }

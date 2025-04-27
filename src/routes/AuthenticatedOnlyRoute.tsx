@@ -5,16 +5,20 @@ import { useAuth } from '@/store/useAuth';
 import { AuthenticatedOnlyLayout } from '@/components/layouts/AuthenticatedOnlyLayout';
 
 export function AuthenticatedOnlyRoute() {
-    const { meStatus } = useAuth();
+    const { status } = useAuth();
 
-    if (meStatus === EAsyncStatus.PENDING) {
+    if (status === EAsyncStatus.IDLE) {
+        return null;
+    }
+
+    if (status === EAsyncStatus.PENDING) {
         return <div>Loading auth...</div>;
     }
 
-    if (meStatus === EAsyncStatus.FULFILLED) {
+    if (status === EAsyncStatus.FULFILLED) {
         return (
             <AuthenticatedOnlyLayout>
-                <Outlet />;
+                <Outlet />
             </AuthenticatedOnlyLayout>
         );
     }

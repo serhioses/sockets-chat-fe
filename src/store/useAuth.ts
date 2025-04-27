@@ -2,7 +2,7 @@ import { create } from 'zustand';
 
 import { EAsyncStatus } from '@/constants/status';
 import { http } from '@/lib/axios';
-import { TSignUpFormValues } from '@/types/auth';
+import { TLoginFormValues, TSignUpFormValues } from '@/types/auth';
 import { TAuthUser, TUser } from '@/types/user';
 import { TMaybe } from '@/types/utilities';
 
@@ -14,78 +14,106 @@ type TAuthResponse<T> = {
 
 type TAuthStore = {
     user: TMaybe<TAuthUser>;
-    meStatus: EAsyncStatus;
-    signUpStatus: EAsyncStatus;
-    logOutStatus: EAsyncStatus;
+    status: EAsyncStatus;
     error?: string;
     formErrors?: string[];
     getMe: () => Promise<void>;
     signUp: (data: TSignUpFormValues) => Promise<void>;
+    login: (data: TLoginFormValues) => Promise<void>;
     logOut: () => Promise<void>;
 };
 
 export const useAuth = create<TAuthStore>((set) => {
     return {
         user: null,
-        meStatus: EAsyncStatus.PENDING,
-        signUpStatus: EAsyncStatus.IDLE,
-        logOutStatus: EAsyncStatus.IDLE,
+        status: EAsyncStatus.IDLE,
         async getMe() {
+            set({ status: EAsyncStatus.PENDING });
+
             try {
                 const res = await http.get<TAuthResponse<TAuthUser>>('/auth/me');
 
                 if (!res.data.data) {
-                    set({ user: null, meStatus: EAsyncStatus.REJECTED });
+                    set({ user: null, status: EAsyncStatus.REJECTED });
                 } else {
-                    set({ user: res.data.data, meStatus: EAsyncStatus.FULFILLED });
+                    set({ user: res.data.data, status: EAsyncStatus.FULFILLED });
                 }
             } catch {
-                set({ user: null, meStatus: EAsyncStatus.REJECTED });
+                set({ user: null, status: EAsyncStatus.REJECTED });
             }
         },
         async signUp(data) {
-            set({ signUpStatus: EAsyncStatus.PENDING, error: undefined, formErrors: undefined });
+            set({ status: EAsyncStatus.PENDING, error: undefined, formErrors: undefined });
 
             try {
                 const res = await http.post<TAuthResponse<TUser>>('/auth/signup', data);
-                console.log(res);
 
                 if (res.data.data) {
                     set({
-                        signUpStatus: EAsyncStatus.FULFILLED,
-                        meStatus: EAsyncStatus.FULFILLED,
+                        status: EAsyncStatus.FULFILLED,
+                        user: {
+                            userId: res.data.data.id,
+                        },
                     });
                 } else {
                     set({
-                        signUpStatus: EAsyncStatus.REJECTED,
+                        status: EAsyncStatus.REJECTED,
                         error: res.data.errors?.at(0)?.message,
                         formErrors: res.data.formErrors,
-                        meStatus: EAsyncStatus.REJECTED,
                     });
                 }
             } catch {
-                set({ signUpStatus: EAsyncStatus.REJECTED, meStatus: EAsyncStatus.REJECTED });
+                set({ status: EAsyncStatus.REJECTED });
+            }
+        },
+        async login(data) {
+            set({
+                status: EAsyncStatus.PENDING,
+                error: undefined,
+                formErrors: undefined,
+            });
+
+            try {
+                const res = await http.post<TAuthResponse<TUser>>('/auth/login', data);
+
+                if (res.data.data) {
+                    set({
+                        status: EAsyncStatus.FULFILLED,
+                        user: {
+                            userId: res.data.data.id,
+                        },
+                    });
+                } else {
+                    set({
+                        status: EAsyncStatus.REJECTED,
+                        error: res.data.errors?.at(0)?.message,
+                        formErrors: res.data.formErrors,
+                    });
+                }
+            } catch {
+                set({ status: EAsyncStatus.REJECTED });
             }
         },
         async logOut() {
-            set({ logOutStatus: EAsyncStatus.PENDING, error: undefined, formErrors: undefined });
+            set({
+                status: EAsyncStatus.PENDING,
+                error: undefined,
+                formErrors: undefined,
+            });
 
             try {
                 const res = await http.post<TAuthResponse<{ success: boolean }>>('/auth/logout');
 
-                console.log(res.data);
-
                 if (res.data.data?.success) {
-                    set({ logOutStatus: EAsyncStatus.FULFILLED, meStatus: EAsyncStatus.REJECTED });
+                    set({ status: EAsyncStatus.REJECTED, user: null });
                 } else {
                     set({
-                        logOutStatus: EAsyncStatus.REJECTED,
+                        status: EAsyncStatus.FULFILLED,
                         error: res.data.errors?.at(0)?.message,
-                        meStatus: EAsyncStatus.FULFILLED,
                     });
                 }
             } catch {
-                set({ logOutStatus: EAsyncStatus.REJECTED, meStatus: EAsyncStatus.FULFILLED });
+                set({ status: EAsyncStatus.REJECTED });
             }
         },
     };

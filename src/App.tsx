@@ -4,7 +4,8 @@ import { useAuth } from './store/useAuth';
 import { Snackbar } from '@/components/snackbar/Snackbar';
 
 export default function App() {
-    const { getMe } = useAuth();
+    const { getMe, ...rest } = useAuth();
+    console.log(rest);
 
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises

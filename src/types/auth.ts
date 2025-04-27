@@ -1,5 +1,6 @@
 import { z } from 'zod';
 
-import { signUpSchema } from '@/constants/auth';
+import { loginSchema, signUpSchema } from '@/constants/auth';
 
 export type TSignUpFormValues = z.infer<typeof signUpSchema>;
+export type TLoginFormValues = z.infer<typeof loginSchema>;
