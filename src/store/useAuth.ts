@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { EAsyncStatus } from '@/constants/status';
 import { http } from '@/lib/axios';
 import { TLoginFormValues, TSignUpFormValues } from '@/types/auth';
-import { TAuthUser, TUser } from '@/types/user';
+import { TUser } from '@/types/user';
 import { TMaybe } from '@/types/utilities';
 
 type TAuthResponse<T> = {
@@ -13,7 +13,7 @@ type TAuthResponse<T> = {
 };
 
 type TAuthStore = {
-    user: TMaybe<TAuthUser>;
+    user: TMaybe<TUser>;
     status: EAsyncStatus;
     error?: string;
     formErrors?: string[];
@@ -31,7 +31,7 @@ export const useAuth = create<TAuthStore>((set) => {
             set({ status: EAsyncStatus.PENDING });
 
             try {
-                const res = await http.get<TAuthResponse<TAuthUser>>('/auth/me');
+                const res = await http.get<TAuthResponse<TUser>>('/auth/me');
 
                 if (!res.data.data) {
                     set({ user: null, status: EAsyncStatus.REJECTED });
@@ -51,9 +51,7 @@ export const useAuth = create<TAuthStore>((set) => {
                 if (res.data.data) {
                     set({
                         status: EAsyncStatus.FULFILLED,
-                        user: {
-                            userId: res.data.data.id,
-                        },
+                        user: res.data.data,
                     });
                 } else {
                     set({
@@ -79,9 +77,7 @@ export const useAuth = create<TAuthStore>((set) => {
                 if (res.data.data) {
                     set({
                         status: EAsyncStatus.FULFILLED,
-                        user: {
-                            userId: res.data.data.id,
-                        },
+                        user: res.data.data,
                     });
                 } else {
                     set({
@@ -113,7 +109,7 @@ export const useAuth = create<TAuthStore>((set) => {
                     });
                 }
             } catch {
-                set({ status: EAsyncStatus.REJECTED });
+                set({ status: EAsyncStatus.FULFILLED });
             }
         },
     };
