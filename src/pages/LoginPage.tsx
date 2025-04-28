@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/constants/auth';
 import { useBoundStore } from '@/store/useBoundStore';
 import { EAsyncStatus } from '@/constants/status';
-import { AuthIllustration } from '@/components/auth/AutIllustration';
+import { AuthIllustration } from '@/components/auth/AuthIllustration';
 
 export function LoginPage() {
     const methods = useForm({

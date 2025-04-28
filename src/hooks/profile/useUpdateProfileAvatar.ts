@@ -22,6 +22,7 @@ export function useUpdateProfileAvatar() {
                 if (state.user) {
                     return { user: data };
                 }
+
                 return state;
             });
             // eslint-disable-next-line @typescript-eslint/no-floating-promises

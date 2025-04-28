@@ -27,18 +27,19 @@ const config = tseslint.config(
     plugins: { '@stylistic': stylistic },
     rules: {
       '@stylistic/semi': 'error',
-      '@stylistic/quotes': ['error', 'single'],
+      '@stylistic/quotes': ['error', 'single', { avoidEscape: true }],
       '@stylistic/jsx-quotes': ['error', 'prefer-double'],
       '@stylistic/indent': ['error', 4],
       '@stylistic/eol-last': ['error', 'always'],
       '@stylistic/comma-dangle': ['error', 'always-multiline'],
-      // '@stylistic/js/padding-line-between-statements': ['error', { blankLine: 'always', prev: '*', next: 'return' }],
+      '@stylistic/padding-line-between-statements': ['error', { blankLine: 'always', prev: '*', next: 'return' }],
       'react/react-in-jsx-scope': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',
         { argsIgnorePattern: '^_' },
       ],
-      '@typescript-eslint/consistent-type-definitions': 'off'
+      '@typescript-eslint/consistent-type-definitions': 'off',
+      '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }]
     },
   }
 );

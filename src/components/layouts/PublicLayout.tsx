@@ -1,13 +1,11 @@
-import { useBoundStore } from '@/store/useBoundStore';
 import { Outlet } from 'react-router-dom';
 
-export function PublicLayout() {
-    const { user } = useBoundStore();
+import { Navbar } from '@/components/navbar/Navbar';
 
+export function PublicLayout() {
     return (
-        <div>
-            <h1>Public</h1>
-            {!!user ? <div>There is user</div> : <div>Default</div>}
+        <div className="min-h-dvh">
+            <Navbar />
             <Outlet />
         </div>
     );

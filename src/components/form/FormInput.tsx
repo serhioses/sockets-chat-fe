@@ -31,7 +31,8 @@ export function FormInput({ name, label, id, type = 'text' }: TFormInputProps) {
                                 type={type}
                                 className={clsx('input w-full', { 'input-error': !!error })}
                                 {...field}
-                                value={field.value || ''}
+                                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                                value={field.value ?? ''}
                             />
                             {error && (
                                 <div className="text-error text-sm pl-2">{error.message}</div>
