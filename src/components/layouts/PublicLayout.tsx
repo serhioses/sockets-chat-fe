@@ -1,8 +1,8 @@
-import { useAuth } from '@/store/useAuth';
+import { useBoundStore } from '@/store/useBoundStore';
 import { Outlet } from 'react-router-dom';
 
 export function PublicLayout() {
-    const { user } = useAuth();
+    const { user } = useBoundStore();
 
     return (
         <div>

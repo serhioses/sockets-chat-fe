@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -8,7 +9,7 @@ import { Form } from '@/components/form/Form';
 import { FormInput } from '@/components/form/FormInput';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/constants/auth';
-import { useAuth } from '@/store/useAuth';
+import { useBoundStore } from '@/store/useBoundStore';
 import { EAsyncStatus } from '@/constants/status';
 import { AuthIllustration } from '@/components/auth/AutIllustration';
 
@@ -17,20 +18,30 @@ export function LoginPage() {
         resolver: zodResolver(loginSchema),
         reValidateMode: 'onSubmit',
     });
-    const { status, login, error, formErrors } = useAuth();
+    const {
+        login,
+        loginState: { status, error, formErrors },
+    } = useBoundStore();
     const navigate = useNavigate();
 
     useEffect(() => {
+        let toastId = '';
         if (error) {
-            toast.error(error);
+            toastId = toast.error(error);
         }
+
+        return () => {
+            if (toastId) {
+                toast.dismiss(toastId);
+            }
+        };
     }, [error]);
 
     useEffect(() => {
         if (status === EAsyncStatus.FULFILLED) {
             navigate('/', { replace: true });
         }
-    }, [status]);
+    }, [navigate, status]);
 
     return (
         <div className="min-h-dvh grid lg:grid-cols-2">
@@ -38,10 +49,7 @@ export function LoginPage() {
                 <div className="w-full max-w-md space-y-8">
                     <div className="text-center mb-8">
                         <div className="flex flex-col items-center gap-2 group">
-                            <div
-                                className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
-              group-hover:bg-primary/20 transition-colors"
-                            >
+                            <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                                 <MessageSquare className="size-6 text-primary" />
                             </div>
                             <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
@@ -52,7 +60,7 @@ export function LoginPage() {
                     <Form methods={methods} onSubmit={login}>
                         {formErrors && (
                             <div className="flex flex-col gap-2">
-                                {formErrors.map((err) => {
+                                {formErrors.map((err: string) => {
                                     return (
                                         <div key={err} className="text-error">
                                             {err}
@@ -76,7 +84,7 @@ export function LoginPage() {
 
                     <div className="text-center">
                         <p className="text-base-content/60">
-                            Don't have an account?{' '}
+                            Don&apos;t have an account?{' '}
                             <Link to="/auth/signup" className="link link-primary">
                                 Create account
                             </Link>

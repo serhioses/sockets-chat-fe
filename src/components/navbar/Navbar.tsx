@@ -1,10 +1,9 @@
-import { EAsyncStatus } from '@/constants/status';
-import { useAuth } from '@/store/useAuth';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useBoundStore } from '@/store/useBoundStore';
 // export function Navbar() {
-//     const { logOut, logOutStatus } = useAuth();
+//     const { logOut, logOutStatus } = useBoundStore();
 //     const navigate = useNavigate();
 
 //     useEffect(() => {
@@ -27,7 +26,7 @@ import { Link } from 'react-router-dom';
 import { LogOut, MessageSquare, Settings, User } from 'lucide-react';
 
 export function Navbar() {
-    const { logOut, status, user } = useAuth();
+    const { logOut, user } = useBoundStore();
 
     const navigate = useNavigate();
 

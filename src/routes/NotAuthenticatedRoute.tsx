@@ -1,10 +1,16 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
 import { EAsyncStatus } from '@/constants/status';
-import { useAuth } from '@/store/useAuth';
+import { useBoundStore } from '@/store/useBoundStore';
 
 export function NotAuthenticatedRoute() {
-    const { status } = useAuth();
+    const {
+        meState: { status },
+    } = useBoundStore();
+
+    if (status === EAsyncStatus.IDLE) {
+        return null;
+    }
 
     if (status === EAsyncStatus.PENDING) {
         return <div>Loading auth...</div>;

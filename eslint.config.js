@@ -32,7 +32,7 @@ const config = tseslint.config(
       '@stylistic/indent': ['error', 4],
       '@stylistic/eol-last': ['error', 'always'],
       '@stylistic/comma-dangle': ['error', 'always-multiline'],
-      '@stylistic/js/padding-line-between-statements': ['error', { blankLine: 'always', prev: '*', next: 'return' }],
+      // '@stylistic/js/padding-line-between-statements': ['error', { blankLine: 'always', prev: '*', next: 'return' }],
       'react/react-in-jsx-scope': 'off',
       '@typescript-eslint/no-unused-vars': [
         'warn',

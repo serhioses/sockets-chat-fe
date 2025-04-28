@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { AppRoutes } from '@/routes/AppRoutes';
-import { useAuth } from './store/useAuth';
+import { useBoundStore } from './store/useBoundStore';
 import { Snackbar } from '@/components/snackbar/Snackbar';
 
 export default function App() {
-    const { getMe, ...rest } = useAuth();
-    console.log(rest);
+    const { getMe, ...rest } = useBoundStore();
+    // console.log(rest);
 
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises

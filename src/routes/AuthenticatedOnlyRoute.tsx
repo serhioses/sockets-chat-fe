@@ -1,11 +1,22 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
 import { EAsyncStatus } from '@/constants/status';
-import { useAuth } from '@/store/useAuth';
+import { useBoundStore } from '@/store/useBoundStore';
 import { AuthenticatedOnlyLayout } from '@/components/layouts/AuthenticatedOnlyLayout';
 
 export function AuthenticatedOnlyRoute() {
-    const { status } = useAuth();
+    const {
+        user,
+        meState: { status },
+    } = useBoundStore();
+
+    if (status === EAsyncStatus.FULFILLED || user) {
+        return (
+            <AuthenticatedOnlyLayout>
+                <Outlet />
+            </AuthenticatedOnlyLayout>
+        );
+    }
 
     if (status === EAsyncStatus.IDLE) {
         return null;
@@ -13,14 +24,6 @@ export function AuthenticatedOnlyRoute() {
 
     if (status === EAsyncStatus.PENDING) {
         return <div>Loading auth...</div>;
-    }
-
-    if (status === EAsyncStatus.FULFILLED) {
-        return (
-            <AuthenticatedOnlyLayout>
-                <Outlet />
-            </AuthenticatedOnlyLayout>
-        );
     }
 
     return <Navigate to="/auth/login" />;

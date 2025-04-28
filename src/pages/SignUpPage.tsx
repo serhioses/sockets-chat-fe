@@ -8,7 +8,7 @@ import { Form } from '@/components/form/Form';
 import { FormInput } from '@/components/form/FormInput';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signUpSchema } from '@/constants/auth';
-import { useAuth } from '@/store/useAuth';
+import { useBoundStore } from '@/store/useBoundStore';
 import { EAsyncStatus } from '@/constants/status';
 import { AuthIllustration } from '@/components/auth/AutIllustration';
 
@@ -17,7 +17,10 @@ export function SignUpPage() {
         resolver: zodResolver(signUpSchema),
         reValidateMode: 'onSubmit',
     });
-    const { status, signUp, error, formErrors } = useAuth();
+    const {
+        signUp,
+        signUpState: { status, error, formErrors },
+    } = useBoundStore();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -28,9 +31,10 @@ export function SignUpPage() {
 
     useEffect(() => {
         if (status === EAsyncStatus.FULFILLED) {
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             navigate('/', { replace: true });
         }
-    }, [status]);
+    }, [navigate, status]);
 
     return (
         <div className="min-h-dvh grid lg:grid-cols-2">
@@ -54,7 +58,7 @@ export function SignUpPage() {
                     <Form methods={methods} onSubmit={signUp}>
                         {formErrors && (
                             <div className="flex flex-col gap-2">
-                                {formErrors.map((err) => {
+                                {formErrors.map((err: string) => {
                                     return (
                                         <div key={err} className="text-error">
                                             {err}
