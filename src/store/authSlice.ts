@@ -5,12 +5,7 @@ import { http } from '@/lib/axios';
 import { TLoginFormValues, TSignUpFormValues } from '@/types/auth';
 import { TUser } from '@/types/user';
 import { TMaybe } from '@/types/utilities';
-
-type TAuthResponse<T> = {
-    data?: TMaybe<T>;
-    errors?: { message: string }[];
-    formErrors?: string[];
-};
+import { THttpResponse } from '@/types/http';
 
 export type TAuthSlice = {
     user: TMaybe<TUser>;
@@ -57,7 +52,7 @@ export const createAuthSlice: StateCreator<TAuthSlice> = (set) => {
             set({ meState: { status: EAsyncStatus.PENDING } });
 
             try {
-                const res = await http.get<TAuthResponse<TUser>>('/auth/me');
+                const res = await http.get<THttpResponse<TUser>>('/auth/me');
 
                 if (!res.data.data) {
                     set({ user: null, meState: { status: EAsyncStatus.REJECTED } });
@@ -78,7 +73,7 @@ export const createAuthSlice: StateCreator<TAuthSlice> = (set) => {
             });
 
             try {
-                const res = await http.post<TAuthResponse<TUser>>('/auth/signup', data);
+                const res = await http.post<THttpResponse<TUser>>('/auth/signup', data);
 
                 if (res.data.data) {
                     set({
@@ -111,7 +106,7 @@ export const createAuthSlice: StateCreator<TAuthSlice> = (set) => {
             });
 
             try {
-                const res = await http.post<TAuthResponse<TUser>>('/auth/login', data);
+                const res = await http.post<THttpResponse<TUser>>('/auth/login', data);
 
                 if (res.data.data) {
                     set({
@@ -140,7 +135,7 @@ export const createAuthSlice: StateCreator<TAuthSlice> = (set) => {
             });
 
             try {
-                const res = await http.post<TAuthResponse<{ success: boolean }>>('/auth/logout');
+                const res = await http.post<THttpResponse<{ success: boolean }>>('/auth/logout');
 
                 if (res.data.data?.success) {
                     set({
