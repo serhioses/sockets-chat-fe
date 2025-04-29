@@ -1,9 +1,10 @@
+import { ChatContainer } from '@/components/chat/ChatContainer';
 import { ChatPlaceholder } from '@/components/chat/ChatPlaceholder';
 import { ChatSidebar } from '@/components/chat/ChatSidebar';
 import { useBoundStore } from '@/store/useBoundStore';
 
 export function HomePage() {
-    const { chatSelectedUserId } = useBoundStore();
+    const { chatSelectedUser } = useBoundStore();
 
     return (
         <div className="h-screen bg-base-200">
@@ -12,7 +13,7 @@ export function HomePage() {
                     <div className="flex h-full rounded-lg overflow-hidden">
                         <ChatSidebar />
 
-                        {chatSelectedUserId ? <div>Chat...</div> : <ChatPlaceholder />}
+                        {chatSelectedUser ? <ChatContainer /> : <ChatPlaceholder />}
                     </div>
                 </div>
             </div>

@@ -39,7 +39,8 @@ const config = tseslint.config(
         { argsIgnorePattern: '^_' },
       ],
       '@typescript-eslint/consistent-type-definitions': 'off',
-      '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }]
+      '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],
+      '@typescript-eslint/prefer-nullish-coalescing': 'off'
     },
   }
 );

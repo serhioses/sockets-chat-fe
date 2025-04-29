@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { Users } from 'lucide-react';
 import clsx from 'clsx';
 
-import { TUser } from '@/types/user';
 import { useBoundStore } from '@/store/useBoundStore';
 import { EAsyncStatus } from '@/constants/status';
-import { ChatSidebarSkeleton } from '@/components/skeletons/CHatSidebarSkeleton';
+import { ChatSidebarSkeleton } from '@/components/skeletons/ChatSidebarSkeleton';
 
 // const users: TUser[] = [
 //     {
@@ -26,7 +25,7 @@ import { ChatSidebarSkeleton } from '@/components/skeletons/CHatSidebarSkeleton'
 
 export function ChatSidebar() {
     // const [selectedUser, setSelectedUser] = useState<TUser | null>(null);
-    const { chatUsers, fetchChatUsers, chatUsersStatus, chatSelectedUserId, selectChatUser } =
+    const { chatUsers, fetchChatUsers, chatUsersStatus, chatSelectedUser, selectChatUser } =
         useBoundStore();
     // const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
 
@@ -73,11 +72,12 @@ export function ChatSidebar() {
                 {chatUsers.map((user) => (
                     <button
                         key={user.id}
-                        onClick={() => selectChatUser(user.id)}
+                        onClick={() => selectChatUser(user)}
                         className={clsx(
                             'w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors cursor-pointer',
                             {
-                                'bg-base-300 ring-1 ring-base-300': chatSelectedUserId === user.id,
+                                'bg-base-300 ring-1 ring-base-300':
+                                    chatSelectedUser?.id === user.id,
                             },
                         )}
                     >

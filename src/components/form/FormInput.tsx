@@ -2,17 +2,26 @@ import { InputHTMLAttributes } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import clsx from 'clsx';
 
-type TFormInputProps = {
+type TFormInputProps = InputHTMLAttributes<HTMLInputElement> & {
     name: string;
     label?: string;
-    id?: string;
-} & Pick<InputHTMLAttributes<HTMLInputElement>, 'type'>;
+    className?: string;
+    wrapperClassName?: string;
+};
 
-export function FormInput({ name, label, id, type = 'text' }: TFormInputProps) {
+export function FormInput({
+    name,
+    className,
+    wrapperClassName,
+    label,
+    id,
+    type = 'text',
+    ...rest
+}: TFormInputProps) {
     const { control } = useFormContext();
 
     return (
-        <div className="mb-4">
+        <div className={clsx('mb-4', wrapperClassName)}>
             {label && (
                 <label htmlFor={id} className="label">
                     {label}
@@ -24,12 +33,46 @@ export function FormInput({ name, label, id, type = 'text' }: TFormInputProps) {
                 render={({ field, fieldState }) => {
                     const { error } = fieldState;
 
+                    if (type === 'file') {
+                        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unused-vars
+                        const { value, ...fieldProps } = field;
+
+                        return (
+                            <>
+                                <input
+                                    id={id}
+                                    type={type}
+                                    className={clsx(
+                                        'input w-full',
+                                        { 'input-error': !!error },
+                                        className,
+                                    )}
+                                    {...rest}
+                                    {...fieldProps}
+                                    // value={field.value ?? ''}
+                                    onChange={(e) => {
+                                        const file = e.target.files?.[0] ?? undefined;
+                                        field.onChange(file);
+                                    }}
+                                />
+                                {error && (
+                                    <div className="text-error text-sm pl-2">{error.message}</div>
+                                )}
+                            </>
+                        );
+                    }
+
                     return (
                         <>
                             <input
                                 id={id}
                                 type={type}
-                                className={clsx('input w-full', { 'input-error': !!error })}
+                                className={clsx(
+                                    'input w-full',
+                                    { 'input-error': !!error },
+                                    className,
+                                )}
+                                {...rest}
                                 {...field}
                                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                                 value={field.value ?? ''}

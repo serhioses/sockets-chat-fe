@@ -6,6 +6,7 @@ import { TLoginFormValues, TSignUpFormValues } from '@/types/auth';
 import { TUser } from '@/types/user';
 import { TMaybe } from '@/types/utilities';
 import { THttpResponse } from '@/types/http';
+import { TStoreState } from '@/types/store';
 
 export type TAuthSlice = {
     user: TMaybe<TUser>;
@@ -33,7 +34,7 @@ export type TAuthSlice = {
     logOut: () => Promise<void>;
 };
 
-export const createAuthSlice: StateCreator<TAuthSlice> = (set) => {
+export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (set, get) => {
     return {
         user: null,
         meState: {
@@ -116,6 +117,8 @@ export const createAuthSlice: StateCreator<TAuthSlice> = (set) => {
                             status: EAsyncStatus.FULFILLED,
                         },
                     });
+
+                    await get().getMe();
                 } else {
                     set({
                         loginState: {
@@ -150,6 +153,11 @@ export const createAuthSlice: StateCreator<TAuthSlice> = (set) => {
                         loginState: {
                             status: EAsyncStatus.IDLE,
                         },
+                        messages: [],
+                        messagesStatus: EAsyncStatus.IDLE,
+                        chatSelectedUser: null,
+                        chatUsersStatus: EAsyncStatus.IDLE,
+                        chatUsers: [],
                     });
                 } else {
                     set({

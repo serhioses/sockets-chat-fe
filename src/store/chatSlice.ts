@@ -4,20 +4,27 @@ import { TUser } from '@/types/user';
 import { EAsyncStatus } from '@/constants/status';
 import { http } from '@/lib/axios';
 import { THttpResponse } from '@/types/http';
+import { TMessage } from '@/types/chat';
 
 export type TChatSlice = {
     chatUsersStatus: EAsyncStatus;
     chatUsers: TUser[];
-    chatSelectedUserId: string | null;
+    chatSelectedUser: TUser | null;
+    messages: TMessage[];
+    messagesStatus: EAsyncStatus;
     fetchChatUsers: () => Promise<void>;
-    selectChatUser: (id: string) => void;
+    selectChatUser: (user: TUser | null) => void;
+    fetchMessages: () => Promise<void>;
+    sendMessage: (data: FormData) => Promise<void>;
 };
 
-export const createChatSlice: StateCreator<TChatSlice> = (set) => {
+export const createChatSlice: StateCreator<TChatSlice> = (set, get) => {
     return {
         chatUsersStatus: EAsyncStatus.IDLE,
         chatUsers: [],
-        chatSelectedUserId: null,
+        chatSelectedUser: null,
+        messages: [],
+        messagesStatus: EAsyncStatus.IDLE,
         async fetchChatUsers() {
             set({ chatUsersStatus: EAsyncStatus.PENDING });
 
@@ -33,8 +40,53 @@ export const createChatSlice: StateCreator<TChatSlice> = (set) => {
                 set({ chatUsersStatus: EAsyncStatus.REJECTED });
             }
         },
-        selectChatUser(id) {
-            set({ chatSelectedUserId: id });
+        selectChatUser(user) {
+            set({ chatSelectedUser: user });
+        },
+        async fetchMessages() {
+            const receiverId = get().chatSelectedUser?.id;
+
+            if (!receiverId) {
+                return;
+            }
+
+            set({ messagesStatus: EAsyncStatus.PENDING });
+
+            try {
+                const res = await http.get<THttpResponse<TMessage[]>>(`/chat/${receiverId}`);
+
+                if (res.data.data) {
+                    set({ messagesStatus: EAsyncStatus.FULFILLED, messages: res.data.data });
+                } else {
+                    set({ messagesStatus: EAsyncStatus.REJECTED, messages: [] });
+                }
+            } catch {
+                set({ messagesStatus: EAsyncStatus.REJECTED, messages: [] });
+            }
+        },
+        async sendMessage(data) {
+            const receiverId = get().chatSelectedUser?.id;
+
+            if (!receiverId) {
+                return;
+            }
+
+            try {
+                const res = await http.post<THttpResponse<TMessage>>(
+                    `/chat/send-message/${receiverId}`,
+                    data,
+                    {
+                        headers: { 'Content-Type': 'multipart/form-data' },
+                    },
+                );
+
+                const newMessage = res.data.data;
+                if (newMessage) {
+                    set((state) => ({ messages: [...state.messages, newMessage] }));
+                }
+            } catch (err) {
+                console.log(err);
+            }
         },
     };
 };
