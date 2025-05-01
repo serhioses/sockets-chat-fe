@@ -193,7 +193,7 @@ export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (s
             }
 
             set({
-                socket: io('http://localhost:8000', {
+                socket: io(import.meta.env.VITE_SOCKET_URL, {
                     query: { userId: user.id },
                     withCredentials: true,
                 }),
