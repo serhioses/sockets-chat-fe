@@ -38,7 +38,7 @@ export function SignUpPage() {
     }, [navigate, status, meStatus]);
 
     return (
-        <div className="min-h-dvh grid lg:grid-cols-2">
+        <>
             <div className="flex flex-col justify-center items-center p-6 sm:p-12">
                 <div className="w-full max-w-md space-y-8">
                     <div className="text-center mb-8">
@@ -74,6 +74,7 @@ export function SignUpPage() {
                         <button
                             type="submit"
                             className="btn btn-soft btn-primary btn-lg w-full mt-4"
+                            disabled={status === EAsyncStatus.PENDING}
                         >
                             {status === EAsyncStatus.PENDING && (
                                 <span className="loading loading-spinner"></span>
@@ -97,6 +98,6 @@ export function SignUpPage() {
                 title="Join our community"
                 text="Connect with friends, share moments, and stay in touch with your loved ones."
             />
-        </div>
+        </>
     );
 }

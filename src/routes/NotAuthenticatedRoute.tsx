@@ -2,6 +2,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 import { EAsyncStatus } from '@/constants/status';
 import { useBoundStore } from '@/store/useBoundStore';
+import { NotAuthenticatedLayout } from '@/components/layouts/NotAuthenticatedLayout';
 
 export function NotAuthenticatedRoute() {
     const {
@@ -17,7 +18,11 @@ export function NotAuthenticatedRoute() {
     }
 
     if (status === EAsyncStatus.REJECTED) {
-        return <Outlet />;
+        return (
+            <NotAuthenticatedLayout>
+                <Outlet />
+            </NotAuthenticatedLayout>
+        );
     }
 
     return <Navigate to="/" />;

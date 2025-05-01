@@ -4,7 +4,7 @@ import { Navbar } from '@/components/navbar/Navbar';
 
 export function AuthenticatedOnlyLayout({ children }: PropsWithChildren) {
     return (
-        <div className="min-h-dvh">
+        <div className="h-dvh flex flex-col">
             <Navbar />
             {children}
         </div>
