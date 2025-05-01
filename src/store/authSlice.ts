@@ -87,11 +87,11 @@ export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (s
 
                 if (res.data.data) {
                     set({
-                        user: res.data.data,
+                        // user: res.data.data,
                         signUpState: { status: EAsyncStatus.FULFILLED },
-                        meState: {
-                            status: EAsyncStatus.FULFILLED,
-                        },
+                        // meState: {
+                        //     status: EAsyncStatus.FULFILLED,
+                        // },
                     });
 
                     await get().getMe();
@@ -122,11 +122,11 @@ export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (s
 
                 if (res.data.data) {
                     set({
-                        user: res.data.data,
+                        // user: res.data.data,
                         loginState: { status: EAsyncStatus.FULFILLED },
-                        meState: {
-                            status: EAsyncStatus.FULFILLED,
-                        },
+                        // meState: {
+                        //     status: EAsyncStatus.FULFILLED,
+                        // },
                     });
 
                     await get().getMe();

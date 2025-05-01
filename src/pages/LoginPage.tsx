@@ -21,6 +21,7 @@ export function LoginPage() {
     const {
         login,
         loginState: { status, error, formErrors },
+        meState: { status: meStatus },
     } = useBoundStore();
     const navigate = useNavigate();
 
@@ -38,10 +39,10 @@ export function LoginPage() {
     }, [error]);
 
     useEffect(() => {
-        if (status === EAsyncStatus.FULFILLED) {
+        if (status === EAsyncStatus.FULFILLED && meStatus === EAsyncStatus.FULFILLED) {
             navigate('/', { replace: true });
         }
-    }, [navigate, status]);
+    }, [navigate, status, meStatus]);
 
     return (
         <div className="min-h-dvh grid lg:grid-cols-2">

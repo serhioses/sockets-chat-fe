@@ -20,6 +20,7 @@ export function SignUpPage() {
     const {
         signUp,
         signUpState: { status, error, formErrors },
+        meState: { status: meStatus },
     } = useBoundStore();
     const navigate = useNavigate();
 
@@ -30,11 +31,11 @@ export function SignUpPage() {
     }, [error]);
 
     useEffect(() => {
-        if (status === EAsyncStatus.FULFILLED) {
+        if (status === EAsyncStatus.FULFILLED && meStatus === EAsyncStatus.FULFILLED) {
             // eslint-disable-next-line @typescript-eslint/no-floating-promises
             navigate('/', { replace: true });
         }
-    }, [navigate, status]);
+    }, [navigate, status, meStatus]);
 
     return (
         <div className="min-h-dvh grid lg:grid-cols-2">
