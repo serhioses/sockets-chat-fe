@@ -8,14 +8,7 @@ import { TUser } from '@/types/user';
 import { TMaybe } from '@/types/utilities';
 import { THttpResponse } from '@/types/http';
 import { TStoreState } from '@/types/store';
-
-type TServerToClientEvents = {
-    getOnlineUsers: (onlineUserIds: string[]) => void;
-};
-
-type TClientToServerEvents = {
-    hello: () => void;
-};
+import { TClientToServerEvents, TServerToClientEvents } from '@/types/socket';
 
 export type TAuthSlice = {
     user: TMaybe<TUser>;
@@ -39,6 +32,7 @@ export type TAuthSlice = {
     };
     onlineUserIds: Set<string>;
     socket: Socket<TServerToClientEvents, TClientToServerEvents> | null;
+
     getMe: () => Promise<void>;
     signUp: (data: TSignUpFormValues) => Promise<void>;
     login: (data: TLoginFormValues) => Promise<void>;
@@ -198,11 +192,24 @@ export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (s
                 return;
             }
 
-            set({ socket: io('http://localhost:8000', { query: { userId: user.id } }) });
+            set({
+                socket: io('http://localhost:8000', {
+                    query: { userId: user.id },
+                    withCredentials: true,
+                }),
+            });
 
             get().socket?.on('getOnlineUsers', (ids) => {
                 console.log('received on client:', ids);
                 set({ onlineUserIds: new Set(ids) });
+            });
+
+            get().socket?.on('message', (data) => {
+                console.log('received message:', data);
+                const newMessage = data.data;
+                if (newMessage) {
+                    set((state) => ({ messages: [...state.messages, newMessage] }));
+                }
             });
         },
     };

@@ -4,7 +4,8 @@ import { TUser } from '@/types/user';
 import { EAsyncStatus } from '@/constants/status';
 import { http } from '@/lib/axios';
 import { THttpResponse } from '@/types/http';
-import { TMessage } from '@/types/chat';
+import { TMessage, TSendMessageFormValues } from '@/types/chat';
+import { TStoreState } from '@/types/store';
 
 export type TChatSlice = {
     chatUsersStatus: EAsyncStatus;
@@ -15,10 +16,10 @@ export type TChatSlice = {
     fetchChatUsers: () => Promise<void>;
     selectChatUser: (user: TUser | null) => void;
     fetchMessages: () => Promise<void>;
-    sendMessage: (data: FormData) => Promise<void>;
+    sendMessage: (data: TSendMessageFormValues) => void;
 };
 
-export const createChatSlice: StateCreator<TChatSlice> = (set, get) => {
+export const createChatSlice: StateCreator<TStoreState, [], [], TChatSlice> = (set, get) => {
     return {
         chatUsersStatus: EAsyncStatus.IDLE,
         chatUsers: [],
@@ -42,6 +43,7 @@ export const createChatSlice: StateCreator<TChatSlice> = (set, get) => {
         },
         selectChatUser(user) {
             set({ chatSelectedUser: user });
+            get().socket?.emit('joinRoom', user?.id);
         },
         async fetchMessages() {
             const receiverId = get().chatSelectedUser?.id;
@@ -64,29 +66,32 @@ export const createChatSlice: StateCreator<TChatSlice> = (set, get) => {
                 set({ messagesStatus: EAsyncStatus.REJECTED, messages: [] });
             }
         },
-        async sendMessage(data) {
+        sendMessage(data) {
             const receiverId = get().chatSelectedUser?.id;
+            const socket = get().socket;
 
-            if (!receiverId) {
+            if (!receiverId || !socket) {
                 return;
             }
 
-            try {
-                const res = await http.post<THttpResponse<TMessage>>(
-                    `/chat/send-message/${receiverId}`,
-                    data,
-                    {
-                        headers: { 'Content-Type': 'multipart/form-data' },
-                    },
-                );
+            socket.emit('message', data, receiverId);
 
-                const newMessage = res.data.data;
-                if (newMessage) {
-                    set((state) => ({ messages: [...state.messages, newMessage] }));
-                }
-            } catch (err) {
-                console.log(err);
-            }
+            // try {
+            //     const res = await http.post<THttpResponse<TMessage>>(
+            //         `/chat/send-message/${receiverId}`,
+            //         data,
+            //         {
+            //             headers: { 'Content-Type': 'multipart/form-data' },
+            //         },
+            //     );
+
+            //     const newMessage = res.data.data;
+            //     if (newMessage) {
+            //         set((state) => ({ messages: [...state.messages, newMessage] }));
+            //     }
+            // } catch (err) {
+            //     console.log(err);
+            // }
         },
     };
 };

@@ -31,13 +31,13 @@ export function ChatInput() {
     }
 
     async function handleSubmit(data: TSendMessageFormValues) {
-        const formData = new FormData();
-        formData.set('text', data.text ?? '');
-        formData.set('image', data.image ?? '');
+        // const formData = new FormData();
+        // formData.set('text', data.text ?? '');
+        // formData.set('image', data.image ?? '');
 
-        await sendMessage(formData);
+        // await sendMessage(formData);
+        await sendMessage(data);
 
-        console.log('here');
         methods.setValue('text', '');
         deleteImagePreview();
         resetImage();
