@@ -1,4 +1,5 @@
 import { StateCreator } from 'zustand';
+import { io, Socket } from 'socket.io-client';
 
 import { EAsyncStatus } from '@/constants/status';
 import { http } from '@/lib/axios';
@@ -7,6 +8,14 @@ import { TUser } from '@/types/user';
 import { TMaybe } from '@/types/utilities';
 import { THttpResponse } from '@/types/http';
 import { TStoreState } from '@/types/store';
+
+type TServerToClientEvents = {
+    getOnlineUsers: (onlineUserIds: string[]) => void;
+};
+
+type TClientToServerEvents = {
+    hello: () => void;
+};
 
 export type TAuthSlice = {
     user: TMaybe<TUser>;
@@ -28,10 +37,13 @@ export type TAuthSlice = {
         status: EAsyncStatus;
         error?: string;
     };
+    onlineUserIds: Set<string>;
+    socket: Socket<TServerToClientEvents, TClientToServerEvents> | null;
     getMe: () => Promise<void>;
     signUp: (data: TSignUpFormValues) => Promise<void>;
     login: (data: TLoginFormValues) => Promise<void>;
     logOut: () => Promise<void>;
+    connectSocket: () => void;
 };
 
 export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (set, get) => {
@@ -49,16 +61,19 @@ export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (s
         logOutState: {
             status: EAsyncStatus.IDLE,
         },
+        onlineUserIds: new Set(),
+        socket: null,
         async getMe() {
             set({ meState: { status: EAsyncStatus.PENDING } });
 
             try {
                 const res = await http.get<THttpResponse<TUser>>('/auth/me');
 
-                if (!res.data.data) {
-                    set({ user: null, meState: { status: EAsyncStatus.REJECTED } });
-                } else {
+                if (res.data.data) {
                     set({ user: res.data.data, meState: { status: EAsyncStatus.FULFILLED } });
+                    get().connectSocket();
+                } else {
+                    set({ user: null, meState: { status: EAsyncStatus.REJECTED } });
                 }
             } catch {
                 set({ user: null, meState: { status: EAsyncStatus.REJECTED } });
@@ -84,6 +99,8 @@ export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (s
                             status: EAsyncStatus.FULFILLED,
                         },
                     });
+
+                    await get().getMe();
                 } else {
                     set({
                         signUpState: {
@@ -141,6 +158,8 @@ export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (s
                 const res = await http.post<THttpResponse<{ success: boolean }>>('/auth/logout');
 
                 if (res.data.data?.success) {
+                    get().socket?.disconnect();
+
                     set({
                         user: null,
                         logOutState: { status: EAsyncStatus.FULFILLED },
@@ -158,6 +177,7 @@ export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (s
                         chatSelectedUser: null,
                         chatUsersStatus: EAsyncStatus.IDLE,
                         chatUsers: [],
+                        socket: null,
                     });
                 } else {
                     set({
@@ -170,6 +190,20 @@ export const createAuthSlice: StateCreator<TStoreState, [], [], TAuthSlice> = (s
             } catch {
                 set({ logOutState: { status: EAsyncStatus.REJECTED } });
             }
+        },
+        connectSocket() {
+            const { user, socket } = get();
+
+            if (!user || socket) {
+                return;
+            }
+
+            set({ socket: io('http://localhost:8000', { query: { userId: user.id } }) });
+
+            get().socket?.on('getOnlineUsers', (ids) => {
+                console.log('received on client:', ids);
+                set({ onlineUserIds: new Set(ids) });
+            });
         },
     };
 };

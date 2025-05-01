@@ -1,11 +1,8 @@
 import { useBoundStore } from '@/store/useBoundStore';
 import { X } from 'lucide-react';
 
-// import { useAuthStore } from '../store/useAuthStore';
-
 export function ChatHeader() {
-    const { chatSelectedUser, selectChatUser } = useBoundStore();
-    // const { onlineUsers } = useAuthStore();
+    const { chatSelectedUser, selectChatUser, onlineUserIds } = useBoundStore();
 
     if (!chatSelectedUser) {
         return null;
@@ -27,8 +24,7 @@ export function ChatHeader() {
                     <div>
                         <h3 className="font-medium">{chatSelectedUser.fullName}</h3>
                         <p className="text-sm text-base-content/70">
-                            {/* {onlineUsers.includes(selectedUser._id) ? 'Online' : 'Offline'} */}
-                            Offline
+                            {onlineUserIds.has(chatSelectedUser.id) ? 'Online' : 'Offline'}
                         </p>
                     </div>
                 </div>

@@ -1,6 +1,8 @@
+import clsx from 'clsx';
+
+import { formatDate } from '@/lib/utils/date';
 import { useBoundStore } from '@/store/useBoundStore';
 import { TMessage } from '@/types/chat';
-import clsx from 'clsx';
 
 type TChatMessageProps = {
     message: TMessage;
@@ -30,10 +32,7 @@ export function ChatMessage({ message }: TChatMessageProps) {
                 </div>
             </div>
             <div className="chat-header mb-1">
-                <time className="text-xs opacity-50 ml-1">
-                    {/* {formatMessageTime(message.createdAt)} */}
-                    {message.createdAt}
-                </time>
+                <time className="text-xs opacity-50 ml-1">{formatDate(message.createdAt)}</time>
             </div>
             <div className="chat-bubble flex flex-col">
                 {message.image && (

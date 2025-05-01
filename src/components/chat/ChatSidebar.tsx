@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Users } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -6,30 +6,16 @@ import { useBoundStore } from '@/store/useBoundStore';
 import { EAsyncStatus } from '@/constants/status';
 import { ChatSidebarSkeleton } from '@/components/skeletons/ChatSidebarSkeleton';
 
-// const users: TUser[] = [
-//     {
-//         id: '1',
-//         fullName: 'John Doe',
-//         email: 'test@mail.com',
-//         createdAt: new Date().toISOString(),
-//         avatar: '',
-//     },
-//     {
-//         id: '2',
-//         fullName: 'Brad Pitt',
-//         email: 'test2@mail.com',
-//         createdAt: new Date().toISOString(),
-//         avatar: '',
-//     },
-// ];
-
 export function ChatSidebar() {
-    // const [selectedUser, setSelectedUser] = useState<TUser | null>(null);
-    const { chatUsers, fetchChatUsers, chatUsersStatus, chatSelectedUser, selectChatUser } =
-        useBoundStore();
-    // const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
+    const {
+        chatUsers,
+        fetchChatUsers,
+        chatUsersStatus,
+        chatSelectedUser,
+        selectChatUser,
+        onlineUserIds,
+    } = useBoundStore();
 
-    // const { onlineUsers } = useAuthStore();
     const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
     useEffect(() => {
@@ -37,9 +23,9 @@ export function ChatSidebar() {
         fetchChatUsers();
     }, [fetchChatUsers]);
 
-    // const filteredUsers = showOnlineOnly
-    //     ? users.filter((user) => onlineUsers.includes(user._id))
-    //     : users;
+    const filteredUsers = useMemo(() => {
+        return showOnlineOnly ? chatUsers.filter((u) => onlineUserIds.has(u.id)) : chatUsers;
+    }, [chatUsers, onlineUserIds, showOnlineOnly]);
 
     if (chatUsersStatus === EAsyncStatus.PENDING) {
         return <ChatSidebarSkeleton />;
@@ -52,7 +38,7 @@ export function ChatSidebar() {
                     <Users className="size-6" />
                     <span className="font-medium hidden lg:block">Contacts</span>
                 </div>
-                {/* TODO: Online filter toggle */}
+
                 <div className="mt-3 hidden lg:flex items-center gap-2">
                     <label className="cursor-pointer flex items-center gap-2">
                         <input
@@ -63,13 +49,12 @@ export function ChatSidebar() {
                         />
                         <span className="text-sm">Show online only</span>
                     </label>
-                    {/* <span className="text-xs text-zinc-500">({onlineUsers.length - 1} online)</span> */}
-                    <span className="text-xs text-zinc-500">(10 online)</span>
+                    <span className="text-xs text-zinc-500">({onlineUserIds.size - 1} online)</span>
                 </div>
             </div>
 
             <div className="overflow-y-auto w-full py-3">
-                {chatUsers.map((user) => (
+                {filteredUsers.map((user) => (
                     <button
                         key={user.id}
                         onClick={() => selectChatUser(user)}
@@ -87,28 +72,26 @@ export function ChatSidebar() {
                                 alt={user.fullName}
                                 className="size-12 object-cover rounded-full"
                             />
-                            {/* {onlineUsers.includes(user._id) && (
+                            {onlineUserIds.has(user.id) && (
                                 <span
                                     className="absolute bottom-0 right-0 size-3 bg-green-500 
                   rounded-full ring-2 ring-zinc-900"
                                 />
-                            )} */}
+                            )}
                         </div>
 
-                        {/* User info - only visible on larger screens */}
                         <div className="hidden lg:block text-left min-w-0">
                             <div className="font-medium truncate">{user.fullName}</div>
                             <div className="text-sm text-zinc-400">
-                                {/* {onlineUsers.includes(user._id) ? 'Online' : 'Offline'} */}
-                                Offline
+                                {onlineUserIds.has(user.id) ? 'Online' : 'Offline'}
                             </div>
                         </div>
                     </button>
                 ))}
 
-                {/* {filteredUsers.length === 0 && (
+                {filteredUsers.length === 0 && (
                     <div className="text-center text-zinc-500 py-4">No online users</div>
-                )} */}
+                )}
             </div>
         </aside>
     );
