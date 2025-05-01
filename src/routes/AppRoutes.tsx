@@ -5,7 +5,6 @@ import { notAuthenticatedRoutes } from '@/routes/not-authenticated-routes';
 import { publicRoutes } from '@/routes/public-routes';
 
 export function AppRoutes() {
-    const isLoggedIn = false;
     // let router: ReturnType<typeof createBrowserRouter>;
 
     // if (isLoggedIn) {

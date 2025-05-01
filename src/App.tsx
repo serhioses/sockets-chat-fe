@@ -4,8 +4,7 @@ import { useBoundStore } from './store/useBoundStore';
 import { Snackbar } from '@/components/snackbar/Snackbar';
 
 export default function App() {
-    const { getMe, theme, ...rest } = useBoundStore();
-    // console.log(rest);
+    const { getMe, theme } = useBoundStore();
 
     useEffect(() => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
