@@ -16,7 +16,7 @@ export type TChatSlice = {
     fetchChatUsers: () => Promise<void>;
     selectChatUser: (user: TUser | null) => void;
     fetchMessages: () => Promise<void>;
-    sendMessage: (data: TSendMessageFormValues) => void;
+    sendMessage: (data: TSendMessageFormValues) => Promise<void>;
 };
 
 export const createChatSlice: StateCreator<TStoreState, [], [], TChatSlice> = (set, get) => {
@@ -66,7 +66,7 @@ export const createChatSlice: StateCreator<TStoreState, [], [], TChatSlice> = (s
                 set({ messagesStatus: EAsyncStatus.REJECTED, messages: [] });
             }
         },
-        sendMessage(data) {
+        async sendMessage(data) {
             const receiverId = get().chatSelectedUser?.id;
             const socket = get().socket;
 
@@ -74,7 +74,14 @@ export const createChatSlice: StateCreator<TStoreState, [], [], TChatSlice> = (s
                 return;
             }
 
-            socket.emit('message', data, receiverId);
+            const res = await socket.emitWithAck('message', data, receiverId);
+            const newMessage = res.data;
+
+            if (newMessage) {
+                set((state) => ({ messages: [...state.messages, newMessage] }));
+            } else {
+                console.log(res.errors);
+            }
 
             // try {
             //     const res = await http.post<THttpResponse<TMessage>>(
