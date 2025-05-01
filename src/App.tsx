@@ -15,37 +15,9 @@ export default function App() {
         document.documentElement.dataset.theme = theme ?? undefined;
     }, [theme]);
 
-    // useEffect(() => {
-    //     http.get('/chat/users')
-    //         .then((r) => {
-    //             console.log(r);
-    //         })
-    //         .catch(console.log);
-    // }, []);
-
-    // function renderRoutes() {
-    //     if (meStatus === EAsyncStatus.PENDING) {
-    //         return <div>Loading rotes...</div>;
-    //     }
-
-    //     if (meStatus === EAsyncStatus.FULFILLED) {
-    //         return <AppRoutes />;
-    //     }
-
-    //     return null;
-    // }
-
     return (
         <>
-            {/* {renderRoutes()} */}
             <AppRoutes />
-            {/* <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/signup" element={<SignUpPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/profile" element={<ProfilePage />} />
-            </Routes> */}
             <Snackbar />
         </>
     );
