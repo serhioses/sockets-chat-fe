@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -40,6 +39,7 @@ export function LoginPage() {
 
     useEffect(() => {
         if (status === EAsyncStatus.FULFILLED && meStatus === EAsyncStatus.FULFILLED) {
+            // eslint-disable-next-line @typescript-eslint/no-floating-promises
             navigate('/', { replace: true });
         }
     }, [navigate, status, meStatus]);

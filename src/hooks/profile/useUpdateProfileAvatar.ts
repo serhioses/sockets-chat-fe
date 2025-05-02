@@ -1,11 +1,12 @@
+import { useEffect } from 'react';
+
 import { useBoundStore } from '@/store/useBoundStore';
-import { useAsync } from '../useAsync';
+import { useAsync } from '@/hooks/useAsync';
 import { TUser } from '@/types/user';
 import { ALLOWED_IMAGE_FORMATS, MAX_FILE_SIZE_BYTES } from '@/constants/file';
 import { EAsyncStatus } from '@/constants/status';
 import { http } from '@/lib/axios';
 import { TMaybe } from '@/types/utilities';
-import { useEffect } from 'react';
 
 type TProfileResponse<T> = {
     data?: TMaybe<T>;

@@ -1,5 +1,6 @@
 import { z } from 'zod';
-import { ALLOWED_IMAGE_FORMATS, MAX_FILE_SIZE_BYTES } from './file';
+
+import { ALLOWED_IMAGE_FORMATS, MAX_FILE_SIZE_BYTES } from '@/constants/file';
 
 export const sendMessageSchema = z
     .object({

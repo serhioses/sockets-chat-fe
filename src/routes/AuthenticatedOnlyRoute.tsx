@@ -3,6 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { EAsyncStatus } from '@/constants/status';
 import { useBoundStore } from '@/store/useBoundStore';
 import { AuthenticatedOnlyLayout } from '@/components/layouts/AuthenticatedOnlyLayout';
+import { PageLoader } from '@/components/loading/PageLoader';
 
 export function AuthenticatedOnlyRoute() {
     const {
@@ -23,7 +24,7 @@ export function AuthenticatedOnlyRoute() {
     }
 
     if (status === EAsyncStatus.PENDING) {
-        return <div>Loading auth...</div>;
+        return <PageLoader />;
     }
 
     return <Navigate to="/auth/login" />;

@@ -1,10 +1,11 @@
+import { useEffect, useLayoutEffect, useRef } from 'react';
+
 import { EAsyncStatus } from '@/constants/status';
 import { useBoundStore } from '@/store/useBoundStore';
-import { ChatHeader } from './ChatHeader';
+import { ChatHeader } from '@/components/chat/ChatHeader';
 import { ChatMessagesSkeleton } from '@/components/skeletons/ChatMessagesSkeleton';
 import { ChatInput } from '@/components/chat/ChatInput';
-import { useEffect, useLayoutEffect, useRef } from 'react';
-import { ChatMessage } from './ChatMessage';
+import { ChatMessage } from '@/components/chat/ChatMessage';
 
 export function ChatContainer() {
     const { messages, messagesStatus, fetchMessages, chatSelectedUser } = useBoundStore();

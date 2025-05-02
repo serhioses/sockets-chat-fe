@@ -54,40 +54,39 @@ export function ChatSidebar() {
             </div>
 
             <div className="overflow-y-auto w-full py-3">
-                {filteredUsers.map((user) => (
-                    <button
-                        key={user.id}
-                        onClick={() => selectChatUser(user)}
-                        className={clsx(
-                            'w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors cursor-pointer',
-                            {
-                                'bg-base-300 ring-1 ring-base-300':
-                                    chatSelectedUser?.id === user.id,
-                            },
-                        )}
-                    >
-                        <div className="relative mx-auto lg:mx-0">
-                            <img
-                                src={user.avatar || '/avatar.png'}
-                                alt={user.fullName}
-                                className="size-12 object-cover rounded-full"
-                            />
-                            {onlineUserIds.has(user.id) && (
-                                <span
-                                    className="absolute bottom-0 right-0 size-3 bg-green-500 
-                  rounded-full ring-2 ring-zinc-900"
-                                />
+                {filteredUsers.map((user) => {
+                    return (
+                        <button
+                            key={user.id}
+                            onClick={() => selectChatUser(user)}
+                            className={clsx(
+                                'w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors cursor-pointer',
+                                {
+                                    'bg-base-300 ring-1 ring-base-300':
+                                        chatSelectedUser?.id === user.id,
+                                },
                             )}
-                        </div>
-
-                        <div className="hidden lg:block text-left min-w-0">
-                            <div className="font-medium truncate">{user.fullName}</div>
-                            <div className="text-sm text-zinc-400">
-                                {onlineUserIds.has(user.id) ? 'Online' : 'Offline'}
+                        >
+                            <div className="relative mx-auto lg:mx-0">
+                                <img
+                                    src={user.avatar || '/avatar.png'}
+                                    alt={user.fullName}
+                                    className="size-12 object-cover rounded-full"
+                                />
+                                {onlineUserIds.has(user.id) && (
+                                    <span className="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900" />
+                                )}
                             </div>
-                        </div>
-                    </button>
-                ))}
+
+                            <div className="hidden lg:block text-left min-w-0">
+                                <div className="font-medium truncate">{user.fullName}</div>
+                                <div className="text-sm text-zinc-400">
+                                    {onlineUserIds.has(user.id) ? 'Online' : 'Offline'}
+                                </div>
+                            </div>
+                        </button>
+                    );
+                })}
 
                 {filteredUsers.length === 0 && (
                     <div className="text-center text-zinc-500 py-4">No online users</div>

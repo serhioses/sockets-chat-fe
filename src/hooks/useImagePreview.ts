@@ -1,5 +1,6 @@
-import { TMaybe } from '@/types/utilities';
 import { useEffect, useState } from 'react';
+
+import { TMaybe } from '@/types/utilities';
 
 export function useImagePreview(image: TMaybe<File>, onDelete?: VoidFunction) {
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -19,8 +20,8 @@ export function useImagePreview(image: TMaybe<File>, onDelete?: VoidFunction) {
         function handleLoad() {
             setImagePreview(reader.result as string);
         }
-        reader.addEventListener('load', handleLoad);
 
+        reader.addEventListener('load', handleLoad);
         reader.readAsDataURL(image);
 
         return () => {

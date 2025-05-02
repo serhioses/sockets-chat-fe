@@ -1,8 +1,8 @@
+import clsx from 'clsx';
+import { Send } from 'lucide-react';
+
 import { THEMES } from '@/constants/themes';
 import { useBoundStore } from '@/store/useBoundStore';
-import clsx from 'clsx';
-// import { useThemeStore } from '../store/useThemeStore';
-import { Send } from 'lucide-react';
 
 const PREVIEW_MESSAGES = [
     { id: 1, content: "Hey! How's it going?", isSent: false },

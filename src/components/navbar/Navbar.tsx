@@ -1,7 +1,7 @@
-import { useBoundStore } from '@/store/useBoundStore';
-
 import { Link } from 'react-router-dom';
 import { LogOut, MessageSquare, Settings, User } from 'lucide-react';
+
+import { useBoundStore } from '@/store/useBoundStore';
 import { EAsyncStatus } from '@/constants/status';
 
 export function Navbar() {

@@ -1,5 +1,6 @@
-import { sendMessageSchema } from '@/constants/chat';
 import { z } from 'zod';
+
+import { sendMessageSchema } from '@/constants/chat';
 
 export type TMessage = {
     _id: string;

@@ -1,5 +1,6 @@
-import { useBoundStore } from '@/store/useBoundStore';
 import { X } from 'lucide-react';
+
+import { useBoundStore } from '@/store/useBoundStore';
 
 export function ChatHeader() {
     const { chatSelectedUser, selectChatUser, onlineUserIds } = useBoundStore();

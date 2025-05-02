@@ -49,7 +49,6 @@ export function FormInput({
                                     )}
                                     {...rest}
                                     {...fieldProps}
-                                    // value={field.value ?? ''}
                                     onChange={(e) => {
                                         const file = e.target.files?.[0] ?? undefined;
                                         field.onChange(file);

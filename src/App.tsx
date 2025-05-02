@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect } from 'react';
+
 import { AppRoutes } from '@/routes/AppRoutes';
-import { useBoundStore } from './store/useBoundStore';
+import { useBoundStore } from '@/store/useBoundStore';
 import { Snackbar } from '@/components/snackbar/Snackbar';
 
 export default function App() {

@@ -31,11 +31,6 @@ export function ChatInput() {
     }
 
     async function handleSubmit(data: TSendMessageFormValues) {
-        // const formData = new FormData();
-        // formData.set('text', data.text ?? '');
-        // formData.set('image', data.image ?? '');
-
-        // await sendMessage(formData);
         await sendMessage(data);
 
         methods.setValue('text', '');
@@ -88,11 +83,7 @@ export function ChatInput() {
                             />
                         </div>
                     </div>
-                    <button
-                        type="submit"
-                        className="btn btn-sm btn-circle"
-                        // disabled={!text.trim() && !imagePreview}
-                    >
+                    <button type="submit" className="btn btn-sm btn-circle">
                         <Send size={16} />
                     </button>
                 </div>

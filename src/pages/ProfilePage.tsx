@@ -1,16 +1,12 @@
+import { ChangeEvent } from 'react';
+import clsx from 'clsx';
+import { Camera, Mail, User } from 'lucide-react';
+
 import { ALLOWED_IMAGE_FORMATS } from '@/constants/file';
 import { EAsyncStatus } from '@/constants/status';
 import { useUpdateProfileAvatar } from '@/hooks/profile/useUpdateProfileAvatar';
-import clsx from 'clsx';
-import { Camera, Mail, User } from 'lucide-react';
-import { ChangeEvent } from 'react';
 
 export function ProfilePage() {
-    // const {
-    //     user,
-    //     updateProfileAvatar,
-    //     profile: { status, error },
-    // } = useBoundStore();
     const { user, updateProfileAvatar, error, status } = useUpdateProfileAvatar();
 
     if (!user) {
@@ -31,7 +27,7 @@ export function ProfilePage() {
 
     return (
         <>
-            <div className="max-w-2xl mx-auto px-4 pt-20 w-full mb-8">
+            <div className="max-w-2xl mx-auto px-4 pt-20 w-full pb-6">
                 <div className="bg-base-200 rounded-xl p-6 space-y-8">
                     <div className="text-center">
                         <h1 className="text-2xl font-semibold ">Profile</h1>
@@ -108,7 +104,7 @@ export function ProfilePage() {
                             <div className="divider my-0"></div>
                             <div className="flex items-center justify-between py-2">
                                 <span>Account status</span>
-                                <span className="text-green-600">Active</span>
+                                <span className="text-success">Active</span>
                             </div>
                         </div>
                     </div>

@@ -5,15 +5,13 @@ import { EAsyncStatus } from '@/constants/status';
 import { TMaybe } from '@/types/utilities';
 import { THttpResponse } from '@/types/http';
 
-// type TExt<T>
-
 export function useAsync<T, R extends THttpResponse<T>>(initialState?: TState<T>) {
     const [state, dispatch] = useReducer(
         asyncReducer,
         initialState ?? { status: EAsyncStatus.IDLE },
     );
 
-    console.log(state);
+    // console.log(state);
 
     const run = useCallback(
         (promise: Promise<AxiosResponse<R>>) => {

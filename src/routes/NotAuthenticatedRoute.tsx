@@ -3,6 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { EAsyncStatus } from '@/constants/status';
 import { useBoundStore } from '@/store/useBoundStore';
 import { NotAuthenticatedLayout } from '@/components/layouts/NotAuthenticatedLayout';
+import { PageLoader } from '@/components/loading/PageLoader';
 
 export function NotAuthenticatedRoute() {
     const {
@@ -14,7 +15,7 @@ export function NotAuthenticatedRoute() {
     }
 
     if (status === EAsyncStatus.PENDING) {
-        return <div>Loading auth...</div>;
+        return <PageLoader />;
     }
 
     if (status === EAsyncStatus.REJECTED) {
