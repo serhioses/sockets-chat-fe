@@ -38,12 +38,10 @@ export const createSocketSlice = createSlice<TSocketState, TSocketActions, TStor
                 });
 
                 get().socket?.on('getOnlineUsers', (ids) => {
-                    console.log('received on client:', ids);
                     set({ onlineUserIds: new Set(ids) });
                 });
 
                 get().socket?.on('message', (data) => {
-                    console.log('received message:', data);
                     const newMessage = data.data;
                     if (newMessage) {
                         set((state) => ({ messages: [...state.messages, newMessage] }));

@@ -11,8 +11,6 @@ export function useAsync<T, R extends THttpResponse<T>>(initialState?: TState<T>
         initialState ?? { status: EAsyncStatus.IDLE },
     );
 
-    // console.log(state);
-
     const run = useCallback(
         (promise: Promise<AxiosResponse<R>>) => {
             dispatch({ type: EAsyncStatus.PENDING });

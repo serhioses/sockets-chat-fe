@@ -6,8 +6,7 @@ import { Snackbar } from '@/components/snackbar/Snackbar';
 import toast from 'react-hot-toast';
 
 export default function App() {
-    const { getMe, theme, error, ...r } = useBoundStore();
-    console.log(useBoundStore());
+    const { getMe, theme, error } = useBoundStore();
 
     useEffect(() => {
         void getMe();
