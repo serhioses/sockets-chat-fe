@@ -9,8 +9,7 @@ export default function App() {
     console.log(r);
 
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        getMe();
+        void getMe();
     }, [getMe]);
 
     useLayoutEffect(() => {

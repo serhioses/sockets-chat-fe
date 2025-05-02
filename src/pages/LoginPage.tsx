@@ -33,14 +33,14 @@ export function LoginPage() {
         return () => {
             if (toastId) {
                 toast.dismiss(toastId);
+                toastId = '';
             }
         };
     }, [error]);
 
     useEffect(() => {
         if (status === EAsyncStatus.FULFILLED && meStatus === EAsyncStatus.FULFILLED) {
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            navigate('/', { replace: true });
+            void navigate('/', { replace: true });
         }
     }, [navigate, status, meStatus]);
 

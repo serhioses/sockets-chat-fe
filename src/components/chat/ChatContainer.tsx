@@ -13,8 +13,7 @@ export function ChatContainer() {
 
     useEffect(() => {
         if (chatSelectedUser?.id) {
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            fetchMessages();
+            void fetchMessages();
         }
     }, [fetchMessages, chatSelectedUser?.id]);
 

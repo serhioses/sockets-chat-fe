@@ -26,8 +26,8 @@ export function useUpdateProfileAvatar() {
 
                 return state;
             });
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            getMe();
+
+            void getMe();
         }
     }, [data, getMe]);
 

@@ -19,8 +19,7 @@ export function ChatSidebar() {
     const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
     useEffect(() => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        fetchChatUsers();
+        void fetchChatUsers();
     }, [fetchChatUsers]);
 
     const filteredUsers = useMemo(() => {

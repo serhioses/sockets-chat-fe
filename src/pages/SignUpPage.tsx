@@ -32,8 +32,7 @@ export function SignUpPage() {
 
     useEffect(() => {
         if (status === EAsyncStatus.FULFILLED && meStatus === EAsyncStatus.FULFILLED) {
-            // eslint-disable-next-line @typescript-eslint/no-floating-promises
-            navigate('/', { replace: true });
+            void navigate('/', { replace: true });
         }
     }, [navigate, status, meStatus]);
 
