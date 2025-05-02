@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import { MessageSquare } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Form } from '@/components/form/Form';
 import { FormInput } from '@/components/form/FormInput';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { signUpSchema } from '@/constants/auth';
 import { useBoundStore } from '@/store/useBoundStore';
 import { EAsyncStatus } from '@/constants/status';
@@ -19,16 +18,10 @@ export function SignUpPage() {
     });
     const {
         signUp,
-        signUpState: { status, error, formErrors },
+        signUpState: { status, formErrors },
         meState: { status: meStatus },
     } = useBoundStore();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if (error) {
-            toast.error(error);
-        }
-    }, [error]);
 
     useEffect(() => {
         if (status === EAsyncStatus.FULFILLED && meStatus === EAsyncStatus.FULFILLED) {
@@ -42,10 +35,7 @@ export function SignUpPage() {
                 <div className="w-full max-w-md space-y-8">
                     <div className="text-center mb-8">
                         <div className="flex flex-col items-center gap-2 group">
-                            <div
-                                className="size-12 rounded-xl bg-primary/10 flex items-center justify-center 
-              group-hover:bg-primary/20 transition-colors"
-                            >
+                            <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                                 <MessageSquare className="size-6 text-primary" />
                             </div>
                             <h1 className="text-2xl font-bold mt-2">Create Account</h1>

@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import { MessageSquare } from 'lucide-react';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import { Form } from '@/components/form/Form';
 import { FormInput } from '@/components/form/FormInput';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema } from '@/constants/auth';
 import { useBoundStore } from '@/store/useBoundStore';
 import { EAsyncStatus } from '@/constants/status';
@@ -19,24 +18,10 @@ export function LoginPage() {
     });
     const {
         login,
-        loginState: { status, error, formErrors },
+        loginState: { status, formErrors },
         meState: { status: meStatus },
     } = useBoundStore();
     const navigate = useNavigate();
-
-    useEffect(() => {
-        let toastId = '';
-        if (error) {
-            toastId = toast.error(error);
-        }
-
-        return () => {
-            if (toastId) {
-                toast.dismiss(toastId);
-                toastId = '';
-            }
-        };
-    }, [error]);
 
     useEffect(() => {
         if (status === EAsyncStatus.FULFILLED && meStatus === EAsyncStatus.FULFILLED) {

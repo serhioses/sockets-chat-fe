@@ -1,38 +1,19 @@
-import { io, Socket } from 'socket.io-client';
-
 import { EAsyncStatus } from '@/constants/status';
 import { http } from '@/lib/axios';
 import { TLoginFormValues, TSignUpFormValues } from '@/types/auth';
 import { TUser } from '@/types/user';
 import { TMaybe } from '@/types/utilities';
-import { THttpResponse } from '@/types/http';
+import { THttpResponse, THttpState } from '@/types/http';
 import { TStoreState } from '@/types/store';
-import { TClientToServerEvents, TServerToClientEvents } from '@/types/socket';
 import { createSlice, resetAllStores } from '@/lib/utils/store';
 
 // TODO: think of moving to hooks with useAsync
 type TAuthState = {
     user: TMaybe<TUser>;
-
-    meState: {
-        status: EAsyncStatus;
-    };
-    signUpState: {
-        status: EAsyncStatus;
-        error?: string;
-        formErrors?: string[];
-    };
-    loginState: {
-        status: EAsyncStatus;
-        error?: string;
-        formErrors?: string[];
-    };
-    logOutState: {
-        status: EAsyncStatus;
-        error?: string;
-    };
-    onlineUserIds: Set<string>;
-    socket: Socket<TServerToClientEvents, TClientToServerEvents> | null;
+    meState: Pick<THttpState, 'status'>;
+    signUpState: THttpState;
+    loginState: THttpState;
+    logOutState: Omit<THttpState, 'formErrors'>;
 };
 
 type TAuthActions = {
@@ -41,7 +22,6 @@ type TAuthActions = {
     login: (data: TLoginFormValues) => Promise<void>;
     logOut: () => Promise<void>;
     resetAuth: VoidFunction;
-    connectSocket: VoidFunction;
 };
 
 export type TAuthSlice = TAuthState & TAuthActions;
@@ -60,8 +40,6 @@ const initialState: TAuthState = {
     logOutState: {
         status: EAsyncStatus.IDLE,
     },
-    onlineUserIds: new Set(),
-    socket: null,
 };
 
 export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState>(
@@ -69,7 +47,7 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
         return {
             ...initialState,
             async getMe() {
-                set({ meState: { status: EAsyncStatus.PENDING } });
+                set({ meState: { status: EAsyncStatus.PENDING }, error: null });
 
                 try {
                     const res = await http.get<THttpResponse<TUser>>('/auth/me');
@@ -78,19 +56,31 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                         set({ user: res.data.data, meState: { status: EAsyncStatus.FULFILLED } });
                         get().connectSocket();
                     } else {
-                        set({ user: null, meState: { status: EAsyncStatus.REJECTED } });
+                        set({
+                            user: null,
+                            meState: {
+                                status: EAsyncStatus.REJECTED,
+                            },
+                            error: get().user ? 'Error during authentication.' : null,
+                        });
                     }
                 } catch {
-                    set({ user: null, meState: { status: EAsyncStatus.REJECTED } });
+                    set({
+                        user: null,
+                        meState: {
+                            status: EAsyncStatus.REJECTED,
+                        },
+                        error: 'Error during authentication.',
+                    });
                 }
             },
             async signUp(data) {
                 set({
                     signUpState: {
                         status: EAsyncStatus.PENDING,
-                        error: undefined,
-                        formErrors: undefined,
+                        formErrors: null,
                     },
+                    error: null,
                 });
 
                 try {
@@ -105,23 +95,24 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                     } else {
                         set({
                             signUpState: {
-                                error: res.data.errors?.at(0)?.message,
                                 formErrors: res.data.formErrors,
                                 status: EAsyncStatus.REJECTED,
                             },
                         });
+                        get().setError(res.data.errors);
                     }
                 } catch {
                     set({ signUpState: { status: EAsyncStatus.REJECTED } });
+                    get().setError('Error during signing up.');
                 }
             },
             async login(data) {
                 set({
                     loginState: {
                         status: EAsyncStatus.PENDING,
-                        error: undefined,
-                        formErrors: undefined,
+                        formErrors: null,
                     },
+                    error: null,
                 });
 
                 try {
@@ -136,19 +127,21 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                     } else {
                         set({
                             loginState: {
-                                error: res.data.errors?.at(0)?.message,
                                 formErrors: res.data.formErrors,
                                 status: EAsyncStatus.REJECTED,
                             },
                         });
+                        get().setError(res.data.errors);
                     }
                 } catch {
                     set({ loginState: { status: EAsyncStatus.REJECTED } });
+                    get().setError('Error during loggin in.');
                 }
             },
             async logOut() {
                 set({
-                    logOutState: { status: EAsyncStatus.PENDING, error: undefined },
+                    logOutState: { status: EAsyncStatus.PENDING },
+                    error: null,
                 });
 
                 try {
@@ -165,12 +158,13 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                         set({
                             logOutState: {
                                 status: EAsyncStatus.REJECTED,
-                                error: res.data.errors?.at(0)?.message,
                             },
                         });
+                        get().setError(res.data.errors);
                     }
                 } catch {
                     set({ logOutState: { status: EAsyncStatus.REJECTED } });
+                    get().setError('Error during signing out.');
                 }
             },
             resetAuth() {
@@ -178,46 +172,20 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                     return {
                         signUpState: {
                             ...state.signUpState,
-                            error: undefined,
-                            formErrors: undefined,
+                            error: null,
+                            formErrors: null,
                         },
                         loginState: {
                             ...state.loginState,
-                            error: undefined,
-                            formErrors: undefined,
+                            error: null,
+                            formErrors: null,
                         },
                         logOutState: {
                             ...state.logOutState,
-                            error: undefined,
+                            error: null,
                         },
+                        error: null,
                     };
-                });
-            },
-            connectSocket() {
-                const { user, socket } = get();
-
-                if (!user || socket) {
-                    return;
-                }
-
-                set({
-                    socket: io(import.meta.env.VITE_SOCKET_URL, {
-                        query: { userId: user.id },
-                        withCredentials: true,
-                    }),
-                });
-
-                get().socket?.on('getOnlineUsers', (ids) => {
-                    console.log('received on client:', ids);
-                    set({ onlineUserIds: new Set(ids) });
-                });
-
-                get().socket?.on('message', (data) => {
-                    console.log('received message:', data);
-                    const newMessage = data.data;
-                    if (newMessage) {
-                        set((state) => ({ messages: [...state.messages, newMessage] }));
-                    }
                 });
             },
         };

@@ -1,5 +1,8 @@
-# TODO
+# Chat app with Express, Mongo, Socket.io and React
+
+## TODO
 
 [x] Add realtime
 [x] Review linter (check disable comments)
-[] Improve error handling
+[x] Improve error handling
+[] Add emojis

@@ -35,7 +35,7 @@ export const createChatSlice = createSlice<TChatState, TChatActions, TStoreState
         return {
             ...initialState,
             async fetchChatUsers() {
-                set({ chatUsersStatus: EAsyncStatus.PENDING });
+                set({ chatUsersStatus: EAsyncStatus.PENDING, error: null });
 
                 try {
                     const res = await http.get<THttpResponse<TUser[]>>('/chat/users');
@@ -44,9 +44,11 @@ export const createChatSlice = createSlice<TChatState, TChatActions, TStoreState
                         set({ chatUsersStatus: EAsyncStatus.FULFILLED, chatUsers: res.data.data });
                     } else {
                         set({ chatUsersStatus: EAsyncStatus.REJECTED });
+                        get().setError(res.data.errors);
                     }
                 } catch {
                     set({ chatUsersStatus: EAsyncStatus.REJECTED });
+                    get().setError('Error fetching users.');
                 }
             },
             selectChatUser(user) {
@@ -60,7 +62,7 @@ export const createChatSlice = createSlice<TChatState, TChatActions, TStoreState
                     return;
                 }
 
-                set({ messagesStatus: EAsyncStatus.PENDING });
+                set({ messagesStatus: EAsyncStatus.PENDING, error: null });
 
                 try {
                     const res = await http.get<THttpResponse<TMessage[]>>(`/chat/${receiverId}`);
@@ -69,9 +71,11 @@ export const createChatSlice = createSlice<TChatState, TChatActions, TStoreState
                         set({ messagesStatus: EAsyncStatus.FULFILLED, messages: res.data.data });
                     } else {
                         set({ messagesStatus: EAsyncStatus.REJECTED, messages: [] });
+                        get().setError(res.data.errors);
                     }
                 } catch {
                     set({ messagesStatus: EAsyncStatus.REJECTED, messages: [] });
+                    get().setError('Error during fetching messages.');
                 }
             },
             async sendMessage(data) {
@@ -88,7 +92,7 @@ export const createChatSlice = createSlice<TChatState, TChatActions, TStoreState
                 if (newMessage) {
                     set((state) => ({ messages: [...state.messages, newMessage] }));
                 } else {
-                    console.log(res.errors);
+                    get().setError(res.errors);
                 }
             },
         };
