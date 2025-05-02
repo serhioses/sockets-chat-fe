@@ -1,0 +1,47 @@
+.emoji-picker.emoji-picker {
+    --epr-highlight-color: var(--color-primary);
+    --epr-hover-bg-color: var(--color-base-200);
+    --epr-hover-bg-color-reduced-opacity: var(--color-base-200);
+    --epr-focus-bg-color: var(--color-base-300);
+    --epr-text-color: var(--color-base-content);
+    --epr-search-input-bg-color: var(--color-base-200);
+    --epr-picker-border-color: var(--color-base-300);
+    --epr-bg-color: var(--color-base-100);
+    --epr-reactions-bg-color: var(--color-base-100);
+    --epr-category-icon-active-color: var(--color-primary);
+    --epr-skin-tone-picker-menu-color: var(--color-base-100);
+    --epr-skin-tone-outer-border-color: var(--color-neutral);
+    --epr-skin-tone-inner-border-color: var(--color-base-100);
+    --epr-search-border-color: var(--color-primary);
+    --epr-active-skin-tone-indicator-border-color: var(--color-primary);
+    --epr-active-skin-hover-color: var(--color-base-200);
+    --epr-search-input-bg-color-active: var(--color-base-100);
+    --epr-search-input-text-color: var(--color-base-content);
+    --epr-search-input-placeholder-color: var(--color-base-content);
+    --epr-emoji-hover-color: var(--color-base-200);
+    --epr-emoji-variation-indicator-color: var(--color-base-300);
+    --epr-emoji-variation-indicator-color-hover: var(--color-base-content);
+    --epr-category-label-bg-color: var(--color-base-100);
+    --epr-category-label-text-color: var(--color-base-content);
+    --epr-preview-border-color: var(--color-base-300);
+    --epr-preview-text-color: var(--color-base-content);
+
+    /* Dark theme overrides */
+    --epr-dark-emoji-variation-picker-bg-color: var(--color-neutral);
+    --epr-dark-highlight-color: var(--color-base-content);
+    --epr-dark-text-color: var(--color-primary);
+    --epr-dark-hover-bg-color: var(--color-base-200);
+    --epr-dark-hover-bg-color-reduced-opacity: var(--color-base-200);
+    --epr-dark-focus-bg-color: var(--color-base-300);
+    --epr-dark-search-input-bg-color: var(--color-base-300);
+    --epr-dark-category-label-bg-color: var(--color-base-200);
+    --epr-dark-picker-border-color: var(--color-base-300);
+    --epr-dark-bg-color: var(--color-base-200);
+    --epr-dark-reactions-bg-color: var(--color-base-200);
+    --epr-dark-search-input-bg-color-active: var(--color-neutral);
+    --epr-dark-emoji-variation-indicator-color: var(--color-neutral);
+    --epr-dark-category-icon-active-color: var(--color-primary);
+    --epr-dark-skin-tone-picker-menu-color: var(--color-base-200);
+    --epr-dark-skin-tone-outer-border-color: var(--color-base-300);
+    --epr-dark-skin-tone-inner-border-color: var(--color-base-100);
+}

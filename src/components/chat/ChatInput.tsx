@@ -1,5 +1,7 @@
-import { Image, Send, X } from 'lucide-react';
+import { Image, Send, Smile, X } from 'lucide-react';
+import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
+import './ChatInput.css';
 import { Form } from '@/components/form/Form';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,6 +11,7 @@ import { sendMessageSchema } from '@/constants/chat';
 import { TSendMessageFormValues } from '@/types/chat';
 import { useImagePreview } from '@/hooks/useImagePreview';
 import { useBoundStore } from '@/store/useBoundStore';
+import { useEffect, useState } from 'react';
 
 export function ChatInput() {
     const { sendMessage } = useBoundStore();
@@ -20,6 +23,28 @@ export function ChatInput() {
         methods.watch('image'),
         resetImage,
     );
+    const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+
+    useEffect(() => {
+        function clickOutsideHandler(e: MouseEvent) {
+            const target = e.target as HTMLElement | null;
+
+            if (!target || target.closest('.emoji-picker')) {
+                return;
+            }
+            if (target.closest('.emoji-toggle')) {
+                return;
+            }
+
+            setIsEmojiPickerOpen(false);
+        }
+
+        document.addEventListener('click', clickOutsideHandler);
+
+        return () => {
+            document.removeEventListener('click', clickOutsideHandler);
+        };
+    }, []);
 
     function resetImage() {
         methods.resetField('image');
@@ -36,6 +61,18 @@ export function ChatInput() {
         methods.setValue('text', '');
         deleteImagePreview();
         resetImage();
+    }
+
+    function handleEmojiClick(emojiData: EmojiClickData) {
+        const currentText = (methods.getValues('text') ?? '').trimEnd();
+
+        if (currentText === '') {
+            methods.setValue('text', emojiData.emoji);
+        } else {
+            methods.setValue('text', currentText.trimEnd() + ' ' + emojiData.emoji);
+        }
+
+        setIsEmojiPickerOpen(false);
     }
 
     return (
@@ -75,6 +112,23 @@ export function ChatInput() {
                                 <Image size={20} />
                             </label>
                         </div>
+                        <div className="relative">
+                            <button
+                                className="btn btn-circle emoji-toggle"
+                                type="button"
+                                onClick={() => setIsEmojiPickerOpen(!isEmojiPickerOpen)}
+                            >
+                                <Smile />
+                            </button>
+                            <EmojiPicker
+                                className="emoji-picker absolute! bottom-[100%] left-0"
+                                lazyLoadEmojis={true}
+                                skinTonesDisabled={true}
+                                onEmojiClick={handleEmojiClick}
+                                open={isEmojiPickerOpen}
+                            />
+                        </div>
+
                         <div className="flex-1">
                             <FormInput
                                 name="text"

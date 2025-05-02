@@ -61,8 +61,8 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                             meState: {
                                 status: EAsyncStatus.REJECTED,
                             },
-                            error: get().user ? 'Error during authentication.' : null,
                         });
+                        get().setError('Error during authentication.');
                     }
                 } catch {
                     set({
@@ -70,8 +70,8 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                         meState: {
                             status: EAsyncStatus.REJECTED,
                         },
-                        error: 'Error during authentication.',
                     });
+                    get().setError(get().user ? 'Error during authentication.' : null);
                 }
             },
             async signUp(data) {
