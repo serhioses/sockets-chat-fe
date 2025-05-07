@@ -1,5 +1,5 @@
-export function formatDate(dateString: string) {
-    return new Date(dateString).toLocaleDateString(undefined, {
+export function formatDate(dateString: string, locales?: Intl.LocalesArgument) {
+    return new Date(dateString).toLocaleDateString(locales, {
         month: 'short',
         year: 'numeric',
         weekday: 'short',
