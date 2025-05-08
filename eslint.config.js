@@ -42,6 +42,9 @@ const config = tseslint.config(
       '@typescript-eslint/no-misused-promises': ['error', { checksVoidReturn: false }],
       '@typescript-eslint/prefer-nullish-coalescing': 'off'
     },
+  },
+  {
+    ignores: ['dist']
   }
 );
 

@@ -1,11 +1,16 @@
-import toast, { ToastBar, Toaster } from 'react-hot-toast';
+import toast, { DefaultToastOptions, ToastBar, Toaster } from 'react-hot-toast';
 import { Info, X } from 'lucide-react';
 
-export function Snackbar() {
+type TSnackbarProps = {
+    options?: DefaultToastOptions;
+};
+
+export function Snackbar({ options = {} }: TSnackbarProps) {
     return (
         <Toaster
             toastOptions={{
                 duration: 3000,
+                ...options,
             }}
         >
             {(t) => (
