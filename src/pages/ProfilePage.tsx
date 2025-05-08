@@ -6,7 +6,7 @@ import { ALLOWED_IMAGE_FORMATS } from '@/constants/file';
 import { EAsyncStatus } from '@/constants/status';
 import { useUpdateProfileAvatar } from '@/hooks/profile/useUpdateProfileAvatar';
 
-export default function ProfilePage() {
+export function ProfilePage() {
     const { user, updateProfileAvatar, error, status } = useUpdateProfileAvatar();
 
     if (!user) {

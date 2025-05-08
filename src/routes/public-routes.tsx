@@ -1,10 +1,8 @@
-import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 
 import { NotFound } from '@/components/not-found/NotFound';
 import { PublicLayout } from '@/components/layouts/PublicLayout';
-
-const SettingsPageLazy = lazy(() => import('@/pages/SettingsPage'));
+import { SettingsPage } from '@/pages/SettingsPage';
 
 export const publicRoutes: RouteObject[] = [
     {
@@ -12,7 +10,7 @@ export const publicRoutes: RouteObject[] = [
         children: [
             {
                 path: '/settings',
-                element: <SettingsPageLazy />,
+                element: <SettingsPage />,
             },
         ],
     },

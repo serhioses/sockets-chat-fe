@@ -2,9 +2,9 @@ import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 
 import { AuthenticatedOnlyRoute } from '@/routes/AuthenticatedOnlyRoute';
+import { ProfilePage } from '@/pages/ProfilePage';
 
 const HomePageLazy = lazy(() => import('@/pages/HomePage'));
-const ProfilePageLazy = lazy(() => import('@/pages/ProfilePage'));
 
 export const authenticatedOnlyRoutes: RouteObject[] = [
     {
@@ -17,7 +17,7 @@ export const authenticatedOnlyRoutes: RouteObject[] = [
             },
             {
                 path: 'profile',
-                element: <ProfilePageLazy />,
+                element: <ProfilePage />,
             },
         ],
     },

@@ -10,5 +10,9 @@ export function NotAuthenticatedLayout({ children }: PropsWithChildren) {
         resetAuth();
     }, [location.pathname, resetAuth]);
 
+    useEffect(() => {
+        void import('@/pages/HomePage');
+    }, []);
+
     return <div className="grid lg:grid-cols-2 h-dvh">{children}</div>;
 }
