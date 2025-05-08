@@ -12,18 +12,22 @@ export function useAsync<T, R extends THttpResponse<T>>(initialState?: TState<T>
     );
 
     const run = useCallback(
-        (promise: Promise<AxiosResponse<R>>) => {
+        (promise: Promise<Partial<AxiosResponse<R>>>) => {
+            if (!promise?.then) {
+                throw new Error('run function must be called only with a Promise.');
+            }
+
             dispatch({ type: EAsyncStatus.PENDING });
 
             return promise.then(
-                (res: AxiosResponse<R>) => {
-                    if (res.data.errors) {
+                (res: Partial<AxiosResponse<R>>) => {
+                    if (res?.data?.data !== undefined) {
+                        dispatch({ type: EAsyncStatus.FULFILLED, data: res.data.data });
+                    } else {
                         dispatch({
                             type: EAsyncStatus.REJECTED,
-                            error: res.data.errors.at(0)?.message,
+                            error: res.data?.errors?.at(0)?.message,
                         });
-                    } else {
-                        dispatch({ type: EAsyncStatus.FULFILLED, data: res.data.data });
                     }
                 },
                 (error) => {
