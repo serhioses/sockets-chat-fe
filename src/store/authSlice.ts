@@ -54,15 +54,16 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
 
                     if (res.data.data) {
                         set({ user: res.data.data, meState: { status: EAsyncStatus.FULFILLED } });
-                        get().connectSocket();
+                        await get().connectSocket();
                     } else {
+                        get().setError(get().user ? 'Error during authentication.' : null);
                         set({
                             user: null,
                             meState: {
                                 status: EAsyncStatus.REJECTED,
                             },
                         });
-                        get().setError('Error during authentication.');
+                        // get().setError('Error during authentication.');
                     }
                 } catch {
                     set({

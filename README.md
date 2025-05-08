@@ -6,8 +6,9 @@
 [x] Review linter (check disable comments)
 [x] Improve error handling
 [x] Add emojis
-[] Add lazy modules
+[x] Add lazy modules
 [] Setup tests
 [] Add unit tests
 [] Add integration tests
 [] Add e2e tests?
+[] Add error boundary

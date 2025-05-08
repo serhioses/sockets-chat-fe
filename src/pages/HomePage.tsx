@@ -3,7 +3,7 @@ import { ChatPlaceholder } from '@/components/chat/ChatPlaceholder';
 import { ChatSidebar } from '@/components/chat/ChatSidebar';
 import { useBoundStore } from '@/store/useBoundStore';
 
-export function HomePage() {
+export default function HomePage() {
     const { chatSelectedUser } = useBoundStore();
 
     return (

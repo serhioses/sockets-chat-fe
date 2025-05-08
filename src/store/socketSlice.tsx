@@ -1,4 +1,4 @@
-import { io, Socket } from 'socket.io-client';
+import type { Socket } from 'socket.io-client';
 
 import { TClientToServerEvents, TServerToClientEvents } from '@/types/socket';
 import { createSlice } from '@/lib/utils/store';
@@ -9,7 +9,7 @@ type TSocketState = {
     socket: Socket<TServerToClientEvents, TClientToServerEvents> | null;
 };
 type TSocketActions = {
-    connectSocket: VoidFunction;
+    connectSocket: () => Promise<void>;
 };
 
 export type TSocketSlice = TSocketState & TSocketActions;
@@ -23,12 +23,14 @@ export const createSocketSlice = createSlice<TSocketState, TSocketActions, TStor
     (set, get) => {
         return {
             ...initialState,
-            connectSocket() {
+            async connectSocket() {
                 const { user, socket } = get();
 
                 if (!user || socket) {
                     return;
                 }
+
+                const { io } = await import('socket.io-client');
 
                 set({
                     socket: io(import.meta.env.VITE_SOCKET_URL, {
