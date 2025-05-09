@@ -55,7 +55,9 @@ export function FormInput({
                                     }}
                                 />
                                 {error && (
-                                    <div className="text-error text-sm pl-2">{error.message}</div>
+                                    <div className="text-error text-sm pl-2" role="alert">
+                                        {error.message}
+                                    </div>
                                 )}
                             </>
                         );
@@ -75,9 +77,17 @@ export function FormInput({
                                 {...field}
                                 // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                                 value={field.value ?? ''}
+                                aria-invalid={error ? true : undefined}
+                                aria-describedby={error ? `${name}-error` : undefined}
                             />
                             {error && (
-                                <div className="text-error text-sm pl-2">{error.message}</div>
+                                <div
+                                    className="text-error text-sm pl-2"
+                                    role="alert"
+                                    id={`${name}-error`}
+                                >
+                                    {error.message}
+                                </div>
                             )}
                         </>
                     );
