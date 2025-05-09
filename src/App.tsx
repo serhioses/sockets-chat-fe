@@ -1,9 +1,9 @@
 import { useEffect, useLayoutEffect } from 'react';
+import toast from 'react-hot-toast';
 
 import { AppRoutes } from '@/routes/AppRoutes';
 import { useBoundStore } from '@/store/useBoundStore';
 import { Snackbar } from '@/components/snackbar/Snackbar';
-import toast from 'react-hot-toast';
 
 export default function App() {
     const { getMe, theme, error } = useBoundStore();
@@ -27,7 +27,7 @@ export default function App() {
     }, [error]);
 
     useLayoutEffect(() => {
-        document.documentElement.dataset.theme = theme ?? undefined;
+        document.documentElement.dataset.theme = theme;
     }, [theme]);
 
     return (

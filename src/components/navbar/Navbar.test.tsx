@@ -1,4 +1,4 @@
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 import { expect, it, vi } from 'vitest';
 import { render, renderHook, screen } from '@testing-library/react';
 

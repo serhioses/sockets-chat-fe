@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { LogOut, MessageSquare, Settings, User } from 'lucide-react';
 
 import { useBoundStore } from '@/store/useBoundStore';

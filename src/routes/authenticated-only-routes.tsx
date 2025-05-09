@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { RouteObject } from 'react-router-dom';
+import { RouteObject } from 'react-router';
 
 import { AuthenticatedOnlyRoute } from '@/routes/AuthenticatedOnlyRoute';
 import { ProfilePage } from '@/pages/ProfilePage';

@@ -1,4 +1,4 @@
-import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { RouterProvider, createBrowserRouter } from 'react-router';
 
 import { authenticatedOnlyRoutes } from '@/routes/authenticated-only-routes';
 import { notAuthenticatedRoutes } from '@/routes/not-authenticated-routes';

@@ -1,4 +1,4 @@
-import { RouteObject } from 'react-router-dom';
+import { RouteObject } from 'react-router';
 
 import { NotFound } from '@/components/not-found/NotFound';
 import { PublicLayout } from '@/components/layouts/PublicLayout';

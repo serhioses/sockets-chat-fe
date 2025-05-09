@@ -1,6 +1,7 @@
-import { useBoundStore } from '@/store/useBoundStore';
 import { PropsWithChildren, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router';
+
+import { useBoundStore } from '@/store/useBoundStore';
 
 export function NotAuthenticatedLayout({ children }: PropsWithChildren) {
     const { resetAuth } = useBoundStore();

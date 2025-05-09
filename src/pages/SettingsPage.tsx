@@ -34,6 +34,7 @@ export function SettingsPage() {
                                 },
                             )}
                             onClick={() => setTheme(t)}
+                            data-testid="theme-button"
                         >
                             <div className="h-8 w-full rounded-md overflow-hidden" data-theme={t}>
                                 <div className="grid grid-cols-4 gap-px p-1 h-full">
