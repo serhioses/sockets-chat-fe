@@ -7,8 +7,8 @@
 [x] Improve error handling
 [x] Add emojis
 [x] Add lazy modules
-[] Setup tests
-[] Add unit tests
+[x] Setup tests
+[x] Add unit tests
 [] Add integration tests
 [] Add e2e tests?
 [] Add error boundary

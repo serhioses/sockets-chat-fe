@@ -11,13 +11,32 @@ export function Navbar() {
         meState: { status },
     } = useBoundStore();
 
-    if (status === EAsyncStatus.PENDING || status === EAsyncStatus.IDLE) {
+    function renderLinks() {
+        if (status === EAsyncStatus.IDLE || status === EAsyncStatus.PENDING) {
+            return <div className="skeleton h-8 w-20" data-testid="navbar-skeleton" />;
+        }
+
+        if (user) {
+            return (
+                <>
+                    <Link to="/profile" className="btn btn-sm gap-2" data-testid="profile-link">
+                        <User className="size-5" />
+                        <span className="hidden sm:inline">Profile ({user.fullName})</span>
+                    </Link>
+
+                    <button className="flex gap-2 items-center cursor-pointer" onClick={logOut}>
+                        <LogOut className="size-5" />
+                        <span className="hidden sm:inline">Logout</span>
+                    </button>
+                </>
+            );
+        }
+
         return (
-            <header className="border-b border-base-300 sticky w-full top-0 z-40 backdrop-blur-lg bg-base-100/80">
-                <div className="container mx-auto px-4 h-16 max-w-5xl">
-                    <div className="h-16"></div>
-                </div>
-            </header>
+            <Link to="/auth/login" className="btn btn-sm gap-2" data-testid="login-link">
+                <User className="size-5" />
+                <span className="hidden sm:inline">Login</span>
+            </Link>
         );
     }
 
@@ -43,29 +62,7 @@ export function Navbar() {
                             <span className="hidden sm:inline">Settings</span>
                         </Link>
 
-                        {user ? (
-                            <>
-                                <Link to="/profile" className={'btn btn-sm gap-2'}>
-                                    <User className="size-5" />
-                                    <span className="hidden sm:inline">
-                                        Profile ({user.fullName})
-                                    </span>
-                                </Link>
-
-                                <button
-                                    className="flex gap-2 items-center cursor-pointer"
-                                    onClick={logOut}
-                                >
-                                    <LogOut className="size-5" />
-                                    <span className="hidden sm:inline">Logout</span>
-                                </button>
-                            </>
-                        ) : (
-                            <Link to="/auth/login" className={'btn btn-sm gap-2'}>
-                                <User className="size-5" />
-                                <span className="hidden sm:inline">Login</span>
-                            </Link>
-                        )}
+                        {renderLinks()}
                     </div>
                 </div>
             </div>
