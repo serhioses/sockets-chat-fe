@@ -1,4 +1,4 @@
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { LogOut, MessageSquare, Settings, User } from 'lucide-react';
 
 import { useBoundStore } from '@/store/useBoundStore';
@@ -10,6 +10,7 @@ export function Navbar() {
         user,
         meState: { status },
     } = useBoundStore();
+    const navigate = useNavigate();
 
     function renderLinks() {
         if (status === EAsyncStatus.IDLE || status === EAsyncStatus.PENDING) {
@@ -24,7 +25,10 @@ export function Navbar() {
                         <span className="hidden sm:inline">Profile ({user.fullName})</span>
                     </Link>
 
-                    <button className="flex gap-2 items-center cursor-pointer" onClick={logOut}>
+                    <button
+                        className="flex gap-2 items-center cursor-pointer"
+                        onClick={() => logOut(() => navigate('/auth/login', { replace: true }))}
+                    >
                         <LogOut className="size-5" />
                         <span className="hidden sm:inline">Logout</span>
                     </button>

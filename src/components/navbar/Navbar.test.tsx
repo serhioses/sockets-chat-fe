@@ -7,7 +7,7 @@ import { Navbar } from '@/components/navbar/Navbar';
 import { useBoundStore } from '@/store/useBoundStore';
 
 it('should render correct Navbar for authenticated user', async () => {
-    vi.spyOn(useBoundStore.getState(), 'connectSocket').mockResolvedValue(undefined);
+    const spy = vi.spyOn(useBoundStore.getState(), 'connectSocket').mockResolvedValue(undefined);
     document.cookie = `token=${MOCK_TOKEN}`;
     const { result } = renderHook(() => useBoundStore());
 
@@ -27,10 +27,11 @@ it('should render correct Navbar for authenticated user', async () => {
         '"Profile (Test user)"',
     );
     expect(screen.getByText(/logout/i)).toBeInTheDocument();
+    spy.mockRestore();
 });
 
 it('should render correct Navbar for unauthenticated user', async () => {
-    vi.spyOn(useBoundStore.getState(), 'connectSocket').mockResolvedValue(undefined);
+    const spy = vi.spyOn(useBoundStore.getState(), 'connectSocket').mockResolvedValue(undefined);
     const { result } = renderHook(() => useBoundStore());
 
     render(
@@ -46,4 +47,5 @@ it('should render correct Navbar for unauthenticated user', async () => {
     expect(screen.getByTestId('login-link')).toBeInTheDocument();
     expect(screen.queryByTestId('profile-link')).not.toBeInTheDocument();
     expect(screen.queryByText(/logout/i)).not.toBeInTheDocument();
+    spy.mockRestore();
 });

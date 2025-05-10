@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { MessageSquare } from 'lucide-react';
@@ -10,6 +9,7 @@ import { loginSchema } from '@/constants/auth';
 import { useBoundStore } from '@/store/useBoundStore';
 import { EAsyncStatus } from '@/constants/status';
 import { AuthIllustration } from '@/components/auth/AuthIllustration';
+import { TLoginFormValues } from '@/types/auth';
 
 export function LoginPage() {
     const methods = useForm({
@@ -19,15 +19,12 @@ export function LoginPage() {
     const {
         login,
         loginState: { status, formErrors },
-        meState: { status: meStatus },
     } = useBoundStore();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (status === EAsyncStatus.FULFILLED && meStatus === EAsyncStatus.FULFILLED) {
-            void navigate('/', { replace: true });
-        }
-    }, [navigate, status, meStatus]);
+    async function handleSubmit(data: TLoginFormValues) {
+        await login(data, () => navigate('/', { replace: true }));
+    }
 
     return (
         <>
@@ -39,11 +36,13 @@ export function LoginPage() {
                                 <MessageSquare className="size-6 text-primary" />
                             </div>
                             <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
-                            <p className="text-base-content/60">Sign in to your account</p>
+                            <p className="text-base-content/60" data-testid="auth-subtitle">
+                                Sign in to your account
+                            </p>
                         </div>
                     </div>
 
-                    <Form methods={methods} onSubmit={login}>
+                    <Form methods={methods} onSubmit={handleSubmit}>
                         {formErrors && (
                             <div className="flex flex-col gap-2">
                                 {formErrors.map((err: string) => {
@@ -63,7 +62,10 @@ export function LoginPage() {
                             disabled={status === EAsyncStatus.PENDING}
                         >
                             {status === EAsyncStatus.PENDING && (
-                                <span className="loading loading-spinner"></span>
+                                <span
+                                    className="loading loading-spinner"
+                                    data-testid="submit-loader"
+                                ></span>
                             )}
                             Submit
                         </button>

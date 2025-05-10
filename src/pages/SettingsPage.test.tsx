@@ -5,7 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { THEMES } from '@/constants/themes';
 import { renderApp } from '@/test-utils/renderApp';
 
-it('should render SettingsPage', () => {
+it('should render', () => {
     renderApp('/settings');
 
     const buttons = screen.getAllByTestId('theme-button');

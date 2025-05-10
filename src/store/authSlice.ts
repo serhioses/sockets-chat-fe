@@ -18,9 +18,9 @@ type TAuthState = {
 
 type TAuthActions = {
     getMe: () => Promise<void>;
-    signUp: (data: TSignUpFormValues) => Promise<void>;
-    login: (data: TLoginFormValues) => Promise<void>;
-    logOut: () => Promise<void>;
+    signUp: (data: TSignUpFormValues, onSuccess?: VoidFunction) => Promise<void>;
+    login: (data: TLoginFormValues, onSuccess?: VoidFunction) => Promise<void>;
+    logOut: (onSuccess?: VoidFunction) => Promise<void>;
     resetAuth: VoidFunction;
 };
 
@@ -75,7 +75,7 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                     get().setError(get().user ? 'Error during authentication.' : null);
                 }
             },
-            async signUp(data) {
+            async signUp(data, onSuccess) {
                 set({
                     signUpState: {
                         status: EAsyncStatus.PENDING,
@@ -93,6 +93,7 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                         });
 
                         await get().getMe();
+                        onSuccess?.();
                     } else {
                         set({
                             signUpState: {
@@ -107,7 +108,7 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                     get().setError('Error during signing up.');
                 }
             },
-            async login(data) {
+            async login(data, onSuccess) {
                 set({
                     loginState: {
                         status: EAsyncStatus.PENDING,
@@ -125,6 +126,8 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                         });
 
                         await get().getMe();
+
+                        onSuccess?.();
                     } else {
                         set({
                             loginState: {
@@ -139,7 +142,7 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                     get().setError('Error during loggin in.');
                 }
             },
-            async logOut() {
+            async logOut(onSuccess) {
                 set({
                     logOutState: { status: EAsyncStatus.PENDING },
                     error: null,
@@ -155,6 +158,7 @@ export const createAuthSlice = createSlice<TAuthState, TAuthActions, TStoreState
                         resetAllStores();
 
                         await get().getMe();
+                        onSuccess?.();
                     } else {
                         set({
                             logOutState: {

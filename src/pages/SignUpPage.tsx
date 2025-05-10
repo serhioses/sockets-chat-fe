@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
 import { MessageSquare } from 'lucide-react';
@@ -10,6 +9,7 @@ import { signUpSchema } from '@/constants/auth';
 import { useBoundStore } from '@/store/useBoundStore';
 import { EAsyncStatus } from '@/constants/status';
 import { AuthIllustration } from '@/components/auth/AuthIllustration';
+import { TSignUpFormValues } from '@/types/auth';
 
 export function SignUpPage() {
     const methods = useForm({
@@ -19,15 +19,12 @@ export function SignUpPage() {
     const {
         signUp,
         signUpState: { status, formErrors },
-        meState: { status: meStatus },
     } = useBoundStore();
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (status === EAsyncStatus.FULFILLED && meStatus === EAsyncStatus.FULFILLED) {
-            void navigate('/', { replace: true });
-        }
-    }, [navigate, status, meStatus]);
+    async function handleSubmit(data: TSignUpFormValues) {
+        await signUp(data, () => navigate('/', { replace: true }));
+    }
 
     return (
         <>
@@ -45,7 +42,7 @@ export function SignUpPage() {
                         </div>
                     </div>
 
-                    <Form methods={methods} onSubmit={signUp}>
+                    <Form methods={methods} onSubmit={handleSubmit}>
                         {formErrors && (
                             <div className="flex flex-col gap-2">
                                 {formErrors.map((err: string) => {

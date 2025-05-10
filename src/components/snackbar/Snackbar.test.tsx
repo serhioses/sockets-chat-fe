@@ -6,20 +6,6 @@ import toast from 'react-hot-toast';
 
 import { Snackbar } from '@/components/snackbar/Snackbar';
 
-Object.defineProperty(window, 'matchMedia', {
-    writable: true,
-    value: vi.fn().mockImplementation((query: string) => ({
-        matches: false,
-        media: query,
-        onchange: null,
-        addListener: vi.fn(), // deprecated
-        removeListener: vi.fn(), // deprecated
-        addEventListener: vi.fn(),
-        removeEventListener: vi.fn(),
-        dispatchEvent: vi.fn(),
-    })),
-});
-
 it('can show and auto hide', async () => {
     render(<Snackbar options={{ duration: 100 }} />);
 

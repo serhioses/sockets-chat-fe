@@ -13,4 +13,23 @@ export const restHandlers = [
             return HttpResponse.json({ data: { id: '1', fullName: 'Test user' } }, { status: 200 });
         }),
     ),
+    http.post<never, never, THttpResponse<TUser>>(
+        'http://localhost:8000/api/auth/login',
+        async () => {
+            await delay();
+
+            return HttpResponse.json(
+                {
+                    data: {
+                        id: '1',
+                        fullName: 'Test user',
+                        email: 'test@mail.com',
+                        createdAt: '',
+                        avatar: '',
+                    },
+                },
+                { status: 200 },
+            );
+        },
+    ),
 ];
