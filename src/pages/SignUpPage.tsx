@@ -35,7 +35,7 @@ export function SignUpPage() {
                             <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                                 <MessageSquare className="size-6 text-primary" />
                             </div>
-                            <h1 className="text-2xl font-bold mt-2">Create Account</h1>
+                            <h2 className="text-2xl font-bold mt-2">Create Account</h2>
                             <p className="text-base-content/60" data-testid="auth-subtitle">
                                 Get started with your free account
                             </p>

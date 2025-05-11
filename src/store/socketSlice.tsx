@@ -26,6 +26,7 @@ export const createSocketSlice = createSlice<TSocketState, TSocketActions, TStor
             async connectSocket() {
                 const { user, socket } = get();
 
+                console.log('connectSocket CALLED');
                 if (!user || socket) {
                     return;
                 }

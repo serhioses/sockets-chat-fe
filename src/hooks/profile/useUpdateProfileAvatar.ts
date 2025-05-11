@@ -14,7 +14,7 @@ type TProfileResponse<T> = {
 };
 
 export function useUpdateProfileAvatar() {
-    const { user, getMe } = useBoundStore();
+    const { user } = useBoundStore();
     const { run, status, data, error, dispatch } = useAsync<TUser, TProfileResponse<TUser>>();
 
     useEffect(() => {
@@ -26,10 +26,8 @@ export function useUpdateProfileAvatar() {
 
                 return state;
             });
-
-            void getMe();
         }
-    }, [data, getMe]);
+    }, [data]);
 
     async function updateProfileAvatar(file: File) {
         if (file.size > MAX_FILE_SIZE_BYTES) {

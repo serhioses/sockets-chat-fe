@@ -30,7 +30,7 @@ export function ProfilePage() {
             <div className="max-w-2xl mx-auto px-4 pt-20 w-full pb-6">
                 <div className="bg-base-200 rounded-xl p-6 space-y-8">
                     <div className="text-center">
-                        <h1 className="text-2xl font-semibold ">Profile</h1>
+                        <h2 className="text-2xl font-semibold">Profile</h2>
                         <p className="mt-2">Your profile information</p>
                     </div>
 
@@ -39,7 +39,8 @@ export function ProfilePage() {
                             <img
                                 src={user?.avatar || '/avatar.png'}
                                 alt=""
-                                className="size-32 rounded-full object-cover border-4 "
+                                className="size-32 rounded-full object-cover border-4"
+                                data-testid="profile-image"
                             />
                             <label
                                 htmlFor="avatar-upload"
@@ -58,17 +59,28 @@ export function ProfilePage() {
                                     accept={ALLOWED_IMAGE_FORMATS.join(', ')}
                                     onChange={handleFileUpload}
                                     disabled={isLoading}
+                                    aria-label="Upload profile image"
+                                    aria-invalid={!!error}
+                                    aria-describedby={error ? 'upload-error' : undefined}
                                 />
                             </label>
                         </div>
                         <div>
-                            <p className="text-xs">
+                            <p className="text-xs" data-testid="profile-update-avatar-status">
                                 {isLoading
                                     ? 'Uploading...'
                                     : 'Click the camera icon to update your photo'}
                             </p>
                             <div className="text-sm opacity-80">PNG or JPEG only, max 5MB</div>
-                            {error && <div className="text-xs text-error mt-1">{error}</div>}
+                            {error && (
+                                <div
+                                    className="text-xs text-error mt-1"
+                                    id="upload-error"
+                                    role="alert"
+                                >
+                                    {error}
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -78,7 +90,10 @@ export function ProfilePage() {
                                 <User className="w-4 h-4" />
                                 Full name
                             </div>
-                            <p className="px-4 py-2.5 bg-base-300 rounded-lg border">
+                            <p
+                                className="px-4 py-2.5 bg-base-300 rounded-lg border"
+                                data-testid="user-fullname"
+                            >
                                 {user.fullName}
                             </p>
                         </div>
@@ -88,23 +103,30 @@ export function ProfilePage() {
                                 <Mail className="w-4 h-4" />
                                 Email address
                             </div>
-                            <p className="px-4 py-2.5 bg-base-300 rounded-lg border">
+                            <p
+                                className="px-4 py-2.5 bg-base-300 rounded-lg border"
+                                data-testid="user-email"
+                            >
                                 {user.email}
                             </p>
                         </div>
                     </div>
 
                     <div className="mt-6 bg-base-300 rounded-xl p-6">
-                        <h2 className="text-lg font-medium  mb-4">Account information</h2>
+                        <h3 className="text-lg font-medium  mb-4">Account information</h3>
                         <div className="text-sm">
                             <div className="flex items-center justify-between py-2">
                                 <span>Member since</span>
-                                <span>{user.createdAt.split('T')[0]}</span>
+                                <span data-testid="user-createdAt">
+                                    {user.createdAt.split('T')[0]}
+                                </span>
                             </div>
                             <div className="divider my-0"></div>
                             <div className="flex items-center justify-between py-2">
                                 <span>Account status</span>
-                                <span className="text-success">Active</span>
+                                <span className="text-success" data-testid="user-status">
+                                    Active
+                                </span>
                             </div>
                         </div>
                     </div>
