@@ -32,4 +32,23 @@ export const restHandlers = [
             );
         },
     ),
+    http.post<never, never, THttpResponse<TUser>>(
+        'http://localhost:8000/api/auth/signup',
+        async () => {
+            await delay();
+
+            return HttpResponse.json(
+                {
+                    data: {
+                        id: '1',
+                        fullName: 'Test user',
+                        email: 'test@mail.com',
+                        createdAt: '',
+                        avatar: '',
+                    },
+                },
+                { status: 200 },
+            );
+        },
+    ),
 ];

@@ -1,4 +1,4 @@
-import { expect, it, vi } from 'vitest';
+import { expect, it } from 'vitest';
 import { render, screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
