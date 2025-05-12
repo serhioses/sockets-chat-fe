@@ -5,39 +5,35 @@ import { TUser } from '@/types/user';
 import { requireAuth } from '@/mocks/server/middleware';
 import { MOCK_AVATAR_URL, MOCK_USER } from '@/mocks/constants';
 
+const apiURL = import.meta.env.VITE_API_URL;
+
 export const restHandlers = [
     http.get<never, never, THttpResponse<TUser>>(
-        'http://localhost:8000/api/auth/me',
+        `${apiURL}/auth/me`,
         requireAuth(async () => {
             await delay();
 
             return HttpResponse.json({ data: MOCK_USER }, { status: 200 });
         }),
     ),
-    http.post<never, never, THttpResponse<TUser>>(
-        'http://localhost:8000/api/auth/login',
-        async () => {
-            await delay();
+    http.post<never, never, THttpResponse<TUser>>(`${apiURL}/auth/login`, async () => {
+        await delay();
 
-            return HttpResponse.json({ data: MOCK_USER }, { status: 200 });
-        },
-    ),
-    http.post<never, never, THttpResponse<TUser>>(
-        'http://localhost:8000/api/auth/signup',
-        async () => {
-            await delay();
+        return HttpResponse.json({ data: MOCK_USER }, { status: 200 });
+    }),
+    http.post<never, never, THttpResponse<TUser>>(`${apiURL}/auth/signup`, async () => {
+        await delay();
 
-            return HttpResponse.json({ data: MOCK_USER }, { status: 200 });
-        },
-    ),
+        return HttpResponse.json({ data: MOCK_USER }, { status: 200 });
+    }),
     http.put<never, never, THttpResponse<TUser>>(
-        'http://localhost:8000/api/profile/update-profile',
-        async () => {
+        `${apiURL}/profile/update-profile`,
+        requireAuth(async () => {
             await delay();
 
             const data = { ...MOCK_USER, avatar: MOCK_AVATAR_URL };
 
             return HttpResponse.json({ data }, { status: 200 });
-        },
+        }),
     ),
 ];
