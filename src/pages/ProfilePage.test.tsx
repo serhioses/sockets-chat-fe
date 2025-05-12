@@ -1,5 +1,5 @@
 import { expect, it, vi } from 'vitest';
-import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
+import { screen, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { renderApp } from '@/test-utils/renderApp';
@@ -66,15 +66,8 @@ it('should properly update user avatar', async () => {
 
     await userEvent.upload(fileInput, uploadFile);
 
-    expect(screen.getByTestId('profile-update-avatar-status').textContent).toMatch(
-        /uploading\.\.\./i,
-    );
+    await waitForElementToBeRemoved(() => screen.getByTestId('profile-update-avatar-status'));
 
-    await waitFor(() => {
-        expect(screen.getByTestId('profile-update-avatar-status').textContent).not.toMatch(
-            /uploading\.\.\./i,
-        );
-    });
     expect(screen.getByTestId('profile-image')).toHaveAttribute('src', MOCK_AVATAR_URL);
 
     spy.mockRestore();

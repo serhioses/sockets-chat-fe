@@ -66,11 +66,16 @@ export function ProfilePage() {
                             </label>
                         </div>
                         <div>
-                            <p className="text-xs" data-testid="profile-update-avatar-status">
-                                {isLoading
-                                    ? 'Uploading...'
-                                    : 'Click the camera icon to update your photo'}
-                            </p>
+                            {isLoading && (
+                                <p className="text-xs" data-testid="profile-update-avatar-status">
+                                    Uploading...
+                                </p>
+                            )}
+                            {!isLoading && (
+                                <p className="text-xs">
+                                    Click the camera icon to update your photo
+                                </p>
+                            )}
                             <div className="text-sm opacity-80">PNG or JPEG only, max 5MB</div>
                             {error && (
                                 <div

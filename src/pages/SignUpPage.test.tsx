@@ -9,6 +9,8 @@ import { useBoundStore } from '@/store/useBoundStore';
 import { server } from '@/mocks/server/server';
 import { THttpResponse } from '@/types/http';
 
+const apiURL = import.meta.env.VITE_API_URL;
+
 async function renderSignUp() {
     renderApp('/auth/signup');
 
@@ -108,14 +110,11 @@ it('should register user', async () => {
 
 it('should show error when email already exist', async () => {
     server.use(
-        http.post<never, never, THttpResponse<unknown>>(
-            'http://localhost:8000/api/auth/signup',
-            () => {
-                return HttpResponse.json({
-                    errors: [{ message: 'User with this email already exists' }],
-                });
-            },
-        ),
+        http.post<never, never, THttpResponse<unknown>>(`${apiURL}/auth/signup`, () => {
+            return HttpResponse.json({
+                errors: [{ message: 'User with this email already exists' }],
+            });
+        }),
     );
 
     const spy = vi.spyOn(useBoundStore.getState(), 'connectSocket').mockResolvedValue(undefined);

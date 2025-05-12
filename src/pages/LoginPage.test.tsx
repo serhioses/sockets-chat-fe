@@ -9,6 +9,8 @@ import { useBoundStore } from '@/store/useBoundStore';
 import { server } from '@/mocks/server/server';
 import { THttpResponse } from '@/types/http';
 
+const apiURL = import.meta.env.VITE_API_URL;
+
 async function renderLogin() {
     renderApp('/auth/login');
 
@@ -90,12 +92,9 @@ it('should log user in', async () => {
 
 it('should show error when wrong credentials', async () => {
     server.use(
-        http.post<never, never, THttpResponse<unknown>>(
-            'http://localhost:8000/api/auth/login',
-            () => {
-                return HttpResponse.json({ errors: [{ message: 'Login error' }] });
-            },
-        ),
+        http.post<never, never, THttpResponse<unknown>>(`${apiURL}/auth/login`, () => {
+            return HttpResponse.json({ errors: [{ message: 'Login error' }] });
+        }),
     );
 
     const spy = vi.spyOn(useBoundStore.getState(), 'connectSocket').mockResolvedValue(undefined);
