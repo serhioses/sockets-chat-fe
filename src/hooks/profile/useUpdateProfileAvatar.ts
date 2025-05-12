@@ -51,8 +51,9 @@ export function useUpdateProfileAvatar() {
             });
 
             await run(promise);
-        } catch {
-            dispatch({ type: EAsyncStatus.REJECTED, error: 'Something went wrong.' });
+        } catch (error) {
+            const message = error instanceof Error ? error.message : 'Something went wrong.';
+            dispatch({ type: EAsyncStatus.REJECTED, error: message });
         }
     }
 

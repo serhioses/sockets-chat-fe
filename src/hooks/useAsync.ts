@@ -23,16 +23,25 @@ export function useAsync<T, R extends THttpResponse<T>>(initialState?: TState<T>
                 (res: Partial<AxiosResponse<R>>) => {
                     if (res?.data?.data !== undefined) {
                         dispatch({ type: EAsyncStatus.FULFILLED, data: res.data.data });
+
+                        return res.data.data;
                     } else {
                         dispatch({
                             type: EAsyncStatus.REJECTED,
                             error: res.data?.errors?.at(0)?.message,
                         });
+
+                        return Promise.reject(
+                            new Error(res.data?.errors?.at(0)?.message ?? 'Something went wrong.'),
+                        );
                     }
                 },
                 (error) => {
-                    console.log('useAsync error:', error);
                     dispatch({ type: EAsyncStatus.REJECTED, error: 'Something went wrong.' });
+
+                    return Promise.reject(
+                        error instanceof Error ? error : new Error('Something went wrong.'),
+                    );
                 },
             );
         },

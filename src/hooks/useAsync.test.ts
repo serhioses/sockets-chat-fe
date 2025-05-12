@@ -1,5 +1,6 @@
 import { expect, it } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
+
 import { useAsync } from '@/hooks/useAsync';
 import { EAsyncStatus } from '@/constants/status';
 import { deffered } from '@/test-utils/deffered';
@@ -34,7 +35,7 @@ it('should call run with a promise that resolves', async () => {
 
     expect(result.current).toEqual(defaultState);
 
-    let p: Promise<void>;
+    let p: Promise<number | null>;
     act(() => {
         p = result.current.run(promise);
     });
@@ -54,7 +55,7 @@ it('should call run with a promise that rejects', async () => {
 
     expect(result.current).toEqual(defaultState);
 
-    let p: Promise<void>;
+    let p: Promise<number | null>;
     act(() => {
         p = result.current.run(promise);
     });
@@ -63,7 +64,7 @@ it('should call run with a promise that rejects', async () => {
 
     await act(async () => {
         reject();
-        await p.catch();
+        await p.catch(() => null);
     });
 
     expect(result.current).toEqual(rejectedState);

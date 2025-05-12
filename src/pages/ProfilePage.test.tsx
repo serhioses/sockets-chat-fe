@@ -1,11 +1,16 @@
 import { expect, it, vi } from 'vitest';
-import { screen, waitForElementToBeRemoved } from '@testing-library/react';
+import { screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { http, HttpResponse } from 'msw';
 
 import { renderApp } from '@/test-utils/renderApp';
 import { MOCK_AVATAR_URL, MOCK_TOKEN } from '@/mocks/constants';
 import { useBoundStore } from '@/store/useBoundStore';
 import { ALLOWED_IMAGE_FORMATS } from '@/constants/file';
+import { server } from '@/mocks/server/server';
+import { THttpResponse } from '@/types/http';
+
+const apiURL = import.meta.env.VITE_API_URL;
 
 async function renderProfile() {
     renderApp('/profile');
@@ -66,9 +71,34 @@ it('should properly update user avatar', async () => {
 
     await userEvent.upload(fileInput, uploadFile);
 
-    await waitForElementToBeRemoved(() => screen.getByTestId('profile-update-avatar-status'));
+    expect(screen.getByTestId('profile-update-avatar-status').textContent).toMatch(/uploading/i);
 
-    expect(screen.getByTestId('profile-image')).toHaveAttribute('src', MOCK_AVATAR_URL);
+    await waitFor(() => {
+        expect(screen.getByTestId('profile-image')).toHaveAttribute('src', MOCK_AVATAR_URL);
+    });
+
+    spy.mockRestore();
+});
+
+it('should handle error', async () => {
+    server.use(
+        http.put<never, never, THttpResponse<unknown>>(`${apiURL}/profile/update-profile`, () => {
+            return HttpResponse.json({ errors: [{ message: 'Profile error' }] });
+        }),
+    );
+
+    const spy = vi.spyOn(useBoundStore.getState(), 'connectSocket').mockResolvedValue(undefined);
+    document.cookie = `token=${MOCK_TOKEN}`;
+    const fileInput = await renderProfile();
+
+    const uploadFile = new File([Uint8Array.from([137, 80, 78, 71, 13, 10, 26, 10])], 'image.png', {
+        type: 'image/png',
+    });
+
+    await userEvent.upload(fileInput, uploadFile);
+
+    const error = await screen.findByRole('alert');
+    expect(error.textContent).toMatchInlineSnapshot('"Profile error"');
 
     spy.mockRestore();
 });
