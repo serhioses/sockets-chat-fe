@@ -1,4 +1,4 @@
-name: CI
+name: CI/CD
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     env:
       VITE_API_URL: ${{ vars.VITE_API_URL }}
@@ -40,9 +40,18 @@ jobs:
       - name: Build
         run: pnpm build
       
-      - name: Upload build artifact
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-build
-          path: dist/
+      # ─── DEPLOY TO NETLIFY (only on pushes to main) ────────────────────
+      - name: Install Netlify CLI
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+        run: pnpm install -g netlify-cli
+
+      - name: Deploy to Netlify
+        if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+        run: |
+          netlify deploy \
+            --dir dist \
+            --site ${{ secrets.NETLIFY_SITE_ID }} \
+            --auth ${{ secrets.NETLIFY_API_TOKEN }} \
+            --prod \
+            --no-build \
+            --message "$(git log -1 --pretty=%B)"
