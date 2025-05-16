@@ -18,7 +18,7 @@ export function ChatContainer() {
     }, [fetchMessages, chatSelectedUser?.id]);
 
     useLayoutEffect(() => {
-        messageListRef.current?.scrollTo({ top: messageListRef.current.scrollHeight });
+        messageListRef.current?.scrollTo?.({ top: messageListRef.current?.scrollHeight });
     }, [messages]);
 
     if (messagesStatus === EAsyncStatus.PENDING || !chatSelectedUser) {

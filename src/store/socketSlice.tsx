@@ -10,6 +10,7 @@ type TSocketState = {
 };
 type TSocketActions = {
     connectSocket: () => Promise<void>;
+    disconnectSocket: VoidFunction;
 };
 
 export type TSocketSlice = TSocketState & TSocketActions;
@@ -26,7 +27,6 @@ export const createSocketSlice = createSlice<TSocketState, TSocketActions, TStor
             async connectSocket() {
                 const { user, socket } = get();
 
-                console.log('connectSocket CALLED');
                 if (!user || socket) {
                     return;
                 }
@@ -50,6 +50,10 @@ export const createSocketSlice = createSlice<TSocketState, TSocketActions, TStor
                         set((state) => ({ messages: [...state.messages, newMessage] }));
                     }
                 });
+            },
+            disconnectSocket() {
+                get().socket?.disconnect();
+                set({ socket: null });
             },
         };
     },

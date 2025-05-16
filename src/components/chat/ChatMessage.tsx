@@ -17,6 +17,7 @@ export function ChatMessage({ message }: TChatMessageProps) {
                 'chat-end': message.senderId === user?.id,
                 'chat-start': message.senderId !== user?.id,
             })}
+            data-testid="chat-message"
         >
             <div className=" chat-image avatar">
                 <div className="size-10 rounded-full border">

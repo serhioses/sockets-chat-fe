@@ -26,7 +26,7 @@ export function ChatSidebar() {
         return showOnlineOnly ? chatUsers.filter((u) => onlineUserIds.has(u.id)) : chatUsers;
     }, [chatUsers, onlineUserIds, showOnlineOnly]);
 
-    if (chatUsersStatus === EAsyncStatus.PENDING) {
+    if (chatUsersStatus === EAsyncStatus.PENDING || chatUsersStatus === EAsyncStatus.IDLE) {
         return <ChatSidebarSkeleton />;
     }
 
@@ -35,7 +35,9 @@ export function ChatSidebar() {
             <div className="border-b border-base-300 w-full p-5">
                 <div className="flex items-center gap-2">
                     <Users className="size-6" />
-                    <span className="font-medium hidden lg:block">Contacts</span>
+                    <h2 className="font-medium hidden lg:block" data-testid="chat-sidebar-title">
+                        Contacts
+                    </h2>
                 </div>
 
                 <div className="mt-3 hidden lg:flex items-center gap-2">
@@ -48,7 +50,9 @@ export function ChatSidebar() {
                         />
                         <span className="text-sm">Show online only</span>
                     </label>
-                    <span className="text-xs text-zinc-500">({onlineUserIds.size - 1} online)</span>
+                    <span className="text-xs text-zinc-500" data-testid="chat-online-count">
+                        ({onlineUserIds.size - 1} online)
+                    </span>
                 </div>
             </div>
 
@@ -65,6 +69,7 @@ export function ChatSidebar() {
                                         chatSelectedUser?.id === user.id,
                                 },
                             )}
+                            data-testid="chat-contact"
                         >
                             <div className="relative mx-auto lg:mx-0">
                                 <img

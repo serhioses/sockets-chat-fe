@@ -4,7 +4,7 @@ export function ChatMessagesSkeleton() {
     const skeletonMessages = Array(6).fill(null);
 
     return (
-        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+        <div className="flex-1 overflow-y-auto p-4 space-y-4" data-testid="chat-messages-loader">
             {skeletonMessages.map((_, idx) => (
                 <div
                     key={idx}
