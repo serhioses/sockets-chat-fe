@@ -84,6 +84,7 @@ export function FormInput({
                                 <div
                                     className="text-error text-sm pl-2"
                                     role="alert"
+                                    data-error
                                     id={`${name}-error`}
                                 >
                                     {error.message}

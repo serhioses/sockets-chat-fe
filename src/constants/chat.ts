@@ -12,7 +12,7 @@ export const sendMessageSchema = z
             ctx.addIssue({
                 code: z.ZodIssueCode.custom,
                 path: ['text'],
-                message: '',
+                message: 'Message text or image is required',
             });
         }
 

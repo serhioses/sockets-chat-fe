@@ -21,7 +21,19 @@ Object.defineProperty(window, 'matchMedia', {
     })),
 });
 
-beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
+beforeAll(() =>
+    server.listen({
+        onUnhandledRequest(req, print) {
+            const url = new URL(req.url);
+
+            if (url.pathname.includes('socket')) {
+                return;
+            }
+
+            print.error();
+        },
+    }),
+);
 
 afterAll(() => server.close());
 
@@ -29,6 +41,7 @@ afterEach(() => {
     server.resetHandlers();
     cleanup();
     useBoundStore.getState().resetAuth();
+    useBoundStore.getState().disconnectSocket();
     resetAllStores();
     clearCookies();
 });

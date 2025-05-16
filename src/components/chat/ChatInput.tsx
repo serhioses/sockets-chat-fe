@@ -107,6 +107,7 @@ export function ChatInput() {
                                 type="file"
                                 accept={ALLOWED_IMAGE_FORMATS.join(', ')}
                                 wrapperClassName="mb-0!"
+                                aria-label="Upload an image"
                             />
                             <label htmlFor="chat-image" className="hidden sm:flex btn btn-circle">
                                 <Image size={20} />
@@ -117,6 +118,7 @@ export function ChatInput() {
                                 className="btn btn-circle emoji-toggle"
                                 type="button"
                                 onClick={() => setIsEmojiPickerOpen(!isEmojiPickerOpen)}
+                                aria-label="Add emoji"
                             >
                                 <Smile />
                             </button>
@@ -133,11 +135,16 @@ export function ChatInput() {
                             <FormInput
                                 name="text"
                                 placeholder="Type here..."
-                                wrapperClassName="mb-0!"
+                                wrapperClassName="mb-0! **:[&.text-error]:hidden"
+                                aria-label="Message text"
                             />
                         </div>
                     </div>
-                    <button type="submit" className="btn btn-sm btn-circle">
+                    <button
+                        type="submit"
+                        className="btn btn-sm btn-circle"
+                        aria-label="Send message"
+                    >
                         <Send size={16} />
                     </button>
                 </div>
