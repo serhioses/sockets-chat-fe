@@ -1,9 +1,10 @@
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Image, Send, Smile, X } from 'lucide-react';
 import EmojiPicker, { EmojiClickData } from 'emoji-picker-react';
 
 import './ChatInput.css';
 import { Form } from '@/components/form/Form';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FormInput } from '@/components/form/FormInput';
 import { ALLOWED_IMAGE_FORMATS } from '@/constants/file';
@@ -11,7 +12,6 @@ import { sendMessageSchema } from '@/constants/chat';
 import { TSendMessageFormValues } from '@/types/chat';
 import { useImagePreview } from '@/hooks/useImagePreview';
 import { useBoundStore } from '@/store/useBoundStore';
-import { useEffect, useState } from 'react';
 
 export function ChatInput() {
     const { sendMessage } = useBoundStore();

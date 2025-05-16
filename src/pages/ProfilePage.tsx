@@ -36,12 +36,15 @@ export function ProfilePage() {
 
                     <div className="flex flex-col items-center gap-4">
                         <div className="relative">
-                            <img
-                                src={user?.avatar || '/avatar.png'}
-                                alt=""
-                                className="size-32 rounded-full object-cover border-4"
-                                data-testid="profile-image"
-                            />
+                            <div className="avatar">
+                                <div className="ring-primary ring-offset-base-100 w-32 rounded-full ring-2 ring-offset-2">
+                                    <img
+                                        src={user?.avatar || '/avatar.png'}
+                                        alt={`Avatar of ${user.fullName}`}
+                                        data-testid="profile-image"
+                                    />
+                                </div>
+                            </div>
                             <label
                                 htmlFor="avatar-upload"
                                 className={clsx(
