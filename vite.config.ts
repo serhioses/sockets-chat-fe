@@ -13,5 +13,6 @@ export default defineConfig({
         watch: false,
         include: ['src/**/*.test.ts?(x)'],
         setupFiles: 'src/setup-tests.ts',
+        exclude: ['src/e2e'],
     },
 });
