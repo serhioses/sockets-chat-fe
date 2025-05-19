@@ -1,9 +1,11 @@
 import { useEffect, useLayoutEffect } from 'react';
+import { ErrorBoundary } from 'react-error-boundary';
 import toast from 'react-hot-toast';
 
 import { AppRoutes } from '@/routes/AppRoutes';
 import { useBoundStore } from '@/store/useBoundStore';
 import { Snackbar } from '@/components/snackbar/Snackbar';
+import { FullPageError } from '@/components/error/FullPageError';
 
 export default function App() {
     const { getMe, theme, error } = useBoundStore();
@@ -31,9 +33,9 @@ export default function App() {
     }, [theme]);
 
     return (
-        <>
+        <ErrorBoundary FallbackComponent={FullPageError}>
             <AppRoutes />
             <Snackbar />
-        </>
+        </ErrorBoundary>
     );
 }

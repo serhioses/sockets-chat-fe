@@ -10,6 +10,6 @@
 - [x] Setup tests
 - [x] Add unit tests
 - [x] Add integration tests
-- [] Add e2e tests?
-- [] Add error boundary
+- [x] Add e2e tests?
+- [x] Add error boundary
 - [x] Setup CI/CD
