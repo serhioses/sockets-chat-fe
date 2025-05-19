@@ -9,7 +9,7 @@
 - [x] Add lazy modules
 - [x] Setup tests
 - [x] Add unit tests
-- [] Add integration tests
+- [x] Add integration tests
 - [] Add e2e tests?
 - [] Add error boundary
 - [x] Setup CI/CD
