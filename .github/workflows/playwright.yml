@@ -1,0 +1,91 @@
+name: Playwright e2e
+
+env:
+  MONGODB_ATLAS_PUBLIC_API_KEY: ${{ secrets.MONGODB_ATLAS_PUBLIC_API_KEY }}
+  MONGODB_ATLAS_PRIVATE_API_KEY: ${{ secrets.MONGODB_ATLAS_PRIVATE_API_KEY }}
+  MONGODB_ATLAS_ORG_ID: ${{ secrets.MONGODB_ATLAS_ORG_ID }}
+  MONGODB_ATLAS_PROJECT_ID: ${{ secrets.MONGODB_ATLAS_PROJECT_ID }}
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  e2e:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    # NOTE: looks like IP address can't be added to atlas before the service is running
+    # services:
+    #   backend:
+    #     image: ghcr.io/${{ github.repository_owner }}/sockets-chat-app:latest
+    #     credentials:
+    #       username: ${{ github.repository_owner }}
+    #       password: ${{ secrets.SOCKETS_CHAT_BE_E2E_IMAGE_PAT }}
+    #     ports:
+    #       - 8000:8000
+
+    steps:
+      - name: Setup AtlasCLI
+        uses: mongodb/atlas-github-action@v0.2.0
+
+      - name: Use AtlasCLI
+        shell: bash
+        run: |
+          DELETE_AFTER=$(date -u -d "+5 minutes" +"%Y-%m-%dT%H:%M:%SZ")
+          atlas accessLists create --currentIp --deleteAfter "$DELETE_AFTER"
+
+      - name: Log in to GHCR
+        run: |
+          echo "${{ secrets.SOCKETS_CHAT_BE_E2E_IMAGE_PAT }}" \
+            | docker login ghcr.io -u "${{ github.repository_owner }}" --password-stdin
+        
+      - name: Start backend container
+        run: |
+          docker run -d \
+            --name backend \
+            -p 8000:8000 \
+            ghcr.io/${{ github.repository_owner }}/sockets-chat-app:latest
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.12.2'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Wait for backend
+        run: npx wait-on http://localhost:8000/health
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Playwright tests
+        env:
+          VITE_API_URL: http://localhost:8000/api
+          VITE_SOCKET_URL: http://localhost:8000
+        run: pnpm e2e
+      
+      - name: Cleanup images
+        run: |
+          curl -X DELETE "https://api.cloudinary.com/v1_1/${{ secrets.CLOUDINARY_CLOUD_NAME }}/resources/image/tags/e2e" \
+          -u "${{ secrets.CLOUDINARY_API_KEY }}:${{ secrets.CLOUDINARY_API_SECRET }}"
+
+      # - uses: actions/upload-artifact@v4
+      #   if: ${{ !cancelled() }}
+      #   with:
+      #     name: playwright-report
+      #     path: playwright-report/
+      #     retention-days: 1
